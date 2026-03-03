@@ -12,6 +12,6 @@ public class Mover : MonoBehaviour
     void Update()
     {
         
-        transform.Translate(1, 0, 0);
+        transform.Translate(0.01f, 0f, 0f);
     }
 }
