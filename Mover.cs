@@ -11,7 +11,7 @@ public class Mover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float xValue = 0f;
+        float xValue = Input.GetAxis("Horizontal");
         float yValue = 0.01f;
         float zValue = 0f;
         transform.Translate(xValue, yValue, zValue);
