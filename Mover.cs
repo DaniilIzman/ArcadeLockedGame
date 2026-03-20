@@ -11,9 +11,9 @@ public class Mover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        [SerializeField] float xValue = 0f;
-        [SerializeField] float yValue = 0.01f;
-        [SerializeField] float zValue = 0f;
+        float xValue = 0f;
+        float yValue = 0.01f;
+        float zValue = 0f;
         transform.Translate(xValue, yValue, zValue);
     }
 }
