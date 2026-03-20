@@ -12,7 +12,7 @@ public class Mover : MonoBehaviour
     void Update()
     {
         float xValue = Input.GetAxis("Horizontal");
-        float yValue = 0.01f;
+        float yValue = Input.GetAxis("Vertical");
         float zValue = 0f;
         transform.Translate(xValue, yValue, zValue);
     }
