@@ -9,8 +9,8 @@ public class Mover : MonoBehaviour
         PrintInConsole();
     }
 
-    // Update is called once per frame
-    void Update()
+    // Player movement
+    void MovePlayer()
     {
         float xValue = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
         float yValue = 0f;
