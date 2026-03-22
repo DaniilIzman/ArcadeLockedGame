@@ -13,6 +13,6 @@ public class FlyAtPlayer : MonoBehaviour
 
     void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, playerPosition, ProjectileSpeed);
+        transform.position = Vector3.MoveTowards(transform.position, playerPosition, Time.deltaTime * ProjectileSpeed);
     }
 }
