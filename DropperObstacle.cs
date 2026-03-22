@@ -3,16 +3,24 @@ using UnityEngine;
 public class DropperObstacle : MonoBehaviour
 {
     [SerializeField] float TimeBeforeFall = 3f;
+    
+    MeshRenderer myMeshRenderer;
+    Rigidbody myRigidBody;
     void Start()
     {
-        GetComponent<MeshRenderer>().enabled = false;
+        myMeshRenderer = GetComponent<MeshRenderer>();
+        myRigidBody = GetComponent<Rigidbody>();
+
+        myMeshRenderer.enabled = false;
+        myRigidBody.useGravity = false;
     }
 
     void Update()
     {
         if(Time.time > TimeBeforeFall)
         {
-            Debug.Log("Lookout!");
+            myMeshRenderer.enabled = true;
+            myRigidBody.useGravity = true;
         }
     }
 
