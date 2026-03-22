@@ -6,7 +6,8 @@ public class ObjectHitAction : MonoBehaviour
     {
         if(other.gameObject.tag == "Player")
         {
-            GetComponent<MeshRenderer>().material.color = Color.darkOliveGreen;  
+            GetComponent<MeshRenderer>().material.color = Color.darkOliveGreen;
+            gameObject.tag = "Hit";
         }
     }
 }
