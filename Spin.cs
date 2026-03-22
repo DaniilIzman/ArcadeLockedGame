@@ -1,16 +1,18 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Spin : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] float RotateX = 0f;
+    [SerializeField] float RotateY = 0f;
+    [SerializeField] float RotateZ = 0f;
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        transform.Rotate(RotateX, RotateY, RotateZ);
     }
 }
