@@ -1,12 +1,18 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class ObjectHitAction : MonoBehaviour
+public class Scoring : MonoBehaviour
 {
+    
     int bumpCounter = 0;
 
-    void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision other)
     {
-        bumpCounter++;
-        Debug.Log("You've bumped into objects " + bumpCounter + " times");
+        if(other.gameObject.tag != "Hit")
+        {
+            bumpCounter++;
+            Debug.Log("You've bumped into objects " + bumpCounter + " times");
+        }
+
     }
 }
