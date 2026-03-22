@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class DropperObstacle : MonoBehaviour
 {
+    [SerializeField] float TimeBeforeFall = 3f;
     void Start()
     {
         
@@ -9,7 +10,10 @@ public class DropperObstacle : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(Time.time);
+        if(Time.time > TimeBeforeFall)
+        {
+            Debug.Log("Lookout!");
+        }
     }
 
 }
