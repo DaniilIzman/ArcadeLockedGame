@@ -8,9 +8,11 @@ public class FlyAtPlayer : MonoBehaviour
     [SerializeField] bool FollowPlayer;
     Vector3 playerPosition;
     Vector3 constantPlayerPosition;
+    
     void Awake() 
     {
         gameObject.SetActive(false);
+
     }
     
     void Start()
@@ -37,7 +39,7 @@ public class FlyAtPlayer : MonoBehaviour
     }
     void DestroyOnReach()
     {
-        if(transform.position == playerPosition || transform.position == constantPlayerPosition)
+        if(transform.position == playerPosition || Vector3.Distance(transform.position,constantPlayerPosition)  < 0.35f)
         {
             Destroy(gameObject);
         }
