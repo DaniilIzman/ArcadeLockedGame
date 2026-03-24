@@ -23,5 +23,11 @@ public class DropperObstacle : MonoBehaviour
             myRigidBody.useGravity = true;
         }
     }
-
+    void OnCollisionEnter(Collision other)
+    {
+        if(other.gameObject.tag == "Ground")
+        {
+            Destroy(gameObject);
+        }
+    }
 }
