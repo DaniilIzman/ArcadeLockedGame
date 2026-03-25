@@ -6,13 +6,14 @@ public class FlyAtPlayer : MonoBehaviour
     [SerializeField] float ProjectileSpeed = 0f;
     [SerializeField] Transform player;
     [SerializeField] bool FollowPlayer;
+    [SerializeField] bool ActivateTimer;
+    [SerializeField] float Timer = 0f;
     Vector3 playerPosition;
     Vector3 constantPlayerPosition;
     
     void Awake() 
     {
         gameObject.SetActive(false);
-
     }
     
     void Start()
@@ -39,7 +40,8 @@ public class FlyAtPlayer : MonoBehaviour
     }
     void DestroyOnReach()
     {
-        if(transform.position == playerPosition || Vector3.Distance(transform.position,constantPlayerPosition)  < 0.35f)
+        Timer -= Time.deltaTime;
+        if(transform.position == playerPosition || Vector3.Distance(transform.position,constantPlayerPosition)  < 0.35f || Timer <= 0f && ActivateTimer == true)
         {
             Destroy(gameObject);
         }
