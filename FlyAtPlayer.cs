@@ -40,7 +40,11 @@ public class FlyAtPlayer : MonoBehaviour
     }
     void DestroyOnReach()
     {
-        Timer -= Time.deltaTime;
+        if(ActivateTimer == true && Timer >= 0f)
+        {
+            Timer -= Time.deltaTime;
+        }
+
         if(transform.position == playerPosition || Vector3.Distance(transform.position,constantPlayerPosition)  < 0.35f || Timer <= 0f && ActivateTimer == true)
         {
             Destroy(gameObject);
