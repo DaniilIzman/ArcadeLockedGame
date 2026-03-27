@@ -3,8 +3,11 @@ using UnityEngine;
 public class DropperObstacle : MonoBehaviour
 {
     [SerializeField] float TimeBeforeFall = 3f;
-    
+    [SerializeField] bool StaysOnTheGround;
+    [SerializeField] float GroundTimer = 0f;
     MeshRenderer myMeshRenderer;
+    bool OnGround = false;
+
     Rigidbody myRigidBody;
     void Start()
     {
@@ -22,12 +25,27 @@ public class DropperObstacle : MonoBehaviour
             myMeshRenderer.enabled = true;
             myRigidBody.useGravity = true;
         }
+        if(OnGround == true && GroundTimer >= 0f)
+        {
+            GroundTimer -= Time.deltaTime;
+            if(GroundTimer <= 0f)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
     void OnCollisionEnter(Collision other)
     {
         if(other.gameObject.tag == "Ground")
         {
-            Destroy(gameObject);
+            if(StaysOnTheGround == true)
+            {
+                OnGround = true;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }
