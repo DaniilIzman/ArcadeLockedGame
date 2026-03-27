@@ -7,10 +7,12 @@ public class ObjectHitAction : MonoBehaviour
     [SerializeField] float ResetTimer = 0f;
     bool ObjectTouched;
     Color defaultColor;
+    float initialTime = 0f;
 
     void Start()
     {
         defaultColor = GetComponent<MeshRenderer>().material.color;
+        initialTime = ResetTimer;
     }
     void Update()
     {
@@ -36,6 +38,8 @@ public class ObjectHitAction : MonoBehaviour
             if(ResetTimer <= 0f)
             {
                 GetComponent<MeshRenderer>().material.color = defaultColor;
+                ObjectTouched = false;
+                ResetTimer = initialTime;
             }
         }
     }
