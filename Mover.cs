@@ -3,27 +3,26 @@ using UnityEngine;
 public class Mover : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 0f;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    Rigidbody myRigidBody;
     void Start()
     {
+        myRigidBody = GetComponent<Rigidbody>();
         PrintInConsole();
     }
 
-    // Player movement
     void MovePlayer()
     {
-        float xValue = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
+        float xValue = Input.GetAxis("Horizontal") * Time.fixedDeltaTime * moveSpeed;
         float yValue = 0f;
-        float zValue = Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed;
-        transform.Translate(xValue, yValue, zValue);
+        float zValue = Input.GetAxis("Vertical") * Time.fixedDeltaTime * moveSpeed;
+        Vector3 movement = new Vector3(xValue, yValue, zValue);
+        myRigidBody.MovePosition(myRigidBody.position + movement);
     }
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         MovePlayer();
     }
 
-    // Information in console
     void PrintInConsole()
     {
         Debug.Log("Welcome!");
