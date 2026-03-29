@@ -4,6 +4,7 @@ public class Mover : MonoBehaviour
 {
     [SerializeField] bool TankyMovement;
     [SerializeField] float moveSpeed = 0f;
+    [SerializeField] bool MoveWhileRotating;
     [SerializeField] float rotationSpeed = 0f;
     Rigidbody myRigidBody;
     void Start()
@@ -24,10 +25,27 @@ public class Mover : MonoBehaviour
     {
         float moveInput = Input.GetAxis("Vertical") * moveSpeed * Time.fixedDeltaTime;
         float turnInput = Input.GetAxis("Horizontal") * rotationSpeed * Time.fixedDeltaTime;
-        Vector3 movement = transform.forward * moveInput;
-        myRigidBody.MovePosition(myRigidBody.position + movement);
-        Quaternion rotation = Quaternion.Euler(0f, turnInput, 0f);
-        myRigidBody.MoveRotation(myRigidBody.rotation * rotation);
+        if(MoveWhileRotating == false)
+        {
+            if (Mathf.Abs(turnInput) > 0.01f)
+            {
+                    Quaternion rotation = Quaternion.Euler(0f, turnInput, 0f);
+                    myRigidBody.MoveRotation(myRigidBody.rotation * rotation);
+            }
+            else
+            {
+                    Vector3 movement = transform.forward * moveInput;
+                    myRigidBody.MovePosition(myRigidBody.position + movement);
+            }
+        }
+        else
+        {
+            Vector3 movement = transform.forward * moveInput;
+            myRigidBody.MovePosition(myRigidBody.position + movement);
+            Quaternion rotation = Quaternion.Euler(0f, turnInput, 0f);
+            myRigidBody.MoveRotation(myRigidBody.rotation * rotation);
+        }
+
     }
     void FixedUpdate()
     {
