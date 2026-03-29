@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class Mover : MonoBehaviour
 {
+    [SerializeField] bool TankyMovement;
     [SerializeField] float moveSpeed = 0f;
+    [SerializeField] float rotationSpeed = 0f;
     Rigidbody myRigidBody;
     void Start()
     {
@@ -18,9 +20,25 @@ public class Mover : MonoBehaviour
         Vector3 movement = new Vector3(xValue, yValue, zValue);
         myRigidBody.MovePosition(myRigidBody.position + movement);
     }
+    void MovePlayerTanky()
+    {
+        float moveInput = Input.GetAxis("Vertical") * moveSpeed * Time.fixedDeltaTime;
+        float turnInput = Input.GetAxis("Horizontal") * rotationSpeed * Time.fixedDeltaTime;
+        Vector3 movement = transform.forward * moveInput;
+        myRigidBody.MovePosition(myRigidBody.position + movement);
+        Quaternion rotation = Quaternion.Euler(0f, turnInput, 0f);
+        myRigidBody.MoveRotation(myRigidBody.rotation * rotation);
+    }
     void FixedUpdate()
     {
-        MovePlayer();
+        if(TankyMovement == true)
+        {
+            MovePlayerTanky();  
+        }
+        else
+        {
+            MovePlayer();  
+        }
     }
 
     void PrintInConsole()
