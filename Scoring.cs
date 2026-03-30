@@ -6,8 +6,7 @@ public class Scoring : MonoBehaviour
     
     [SerializeField] int BumpMax;
     [SerializeField] bool BumpMaxActivate;
-    int bumpCounter = 0;
-
+    public int bumpCounter = 0;
     void OnCollisionEnter(Collision other)
     {
         if(other.gameObject.tag != "Hit" && other.gameObject.tag != "Ground")
