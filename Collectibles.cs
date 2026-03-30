@@ -2,15 +2,18 @@ using UnityEngine;
 
 public class Collectables : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] float FreezeTimer = 0f;
+    [SerializeField] float SpeedMultiplier = 0f;
+    [SerializeField] int AdditionalBumps = 0;
+    [SerializeField] float InvulnerabilityTimer = 0f;
+    void OnTriggerEnter(Collider other)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if(gameObject.tag == "HP" && other.gameObject.tag == "Player")
+        {
+            Scoring scoring = FindAnyObjectByType<Scoring>();
+            scoring.bumpCounter -= AdditionalBumps;
+            scoring.bumpCounter = Mathf.Max(scoring.bumpCounter, 0);
+            Destroy(gameObject);
+        }
     }
 }
