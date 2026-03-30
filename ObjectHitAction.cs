@@ -8,11 +8,12 @@ public class ObjectHitAction : MonoBehaviour
     bool ObjectTouched;
     Color defaultColor;
     float initialTime = 0f;
-
+    string initialTag;
     void Start()
     {
         defaultColor = GetComponent<MeshRenderer>().material.color;
         initialTime = ResetTimer;
+        initialTag = gameObject.tag;
     }
     void Update()
     {
@@ -40,6 +41,7 @@ public class ObjectHitAction : MonoBehaviour
                 GetComponent<MeshRenderer>().material.color = defaultColor;
                 ObjectTouched = false;
                 ResetTimer = initialTime;
+                gameObject.tag = initialTag;
             }
         }
     }
