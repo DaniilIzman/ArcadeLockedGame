@@ -5,7 +5,7 @@ public class Scoring : MonoBehaviour
 {
     
     [SerializeField] int BumpMax;
-    [SerializeField] bool BumpMaxActivate;
+    public bool BumpMaxActivate;
     public int bumpCounter = 0;
     void OnCollisionEnter(Collision other)
     {
