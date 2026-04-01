@@ -6,7 +6,6 @@ public class Collectibles : MonoBehaviour
     //[SerializeField] float SpeedMultiplier = 0f;
     [SerializeField] int AdditionalBumps = 0;
     //[SerializeField] float InvulnerabilityTimer = 0f;
-    bool frozen = false;
     Scoring scoring;
     Mover mover;
     void Awake()
