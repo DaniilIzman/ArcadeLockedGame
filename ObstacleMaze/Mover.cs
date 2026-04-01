@@ -6,6 +6,7 @@ public class Mover : MonoBehaviour
     [SerializeField] float moveSpeed = 0f;
     [SerializeField] bool MoveWhileRotating;
     [SerializeField] float rotationSpeed = 0f;
+    public bool canMove = true;
     Rigidbody myRigidBody;
     void Start()
     {
@@ -13,7 +14,7 @@ public class Mover : MonoBehaviour
         PrintInConsole();
     }
 
-    void MovePlayer()
+    public void MovePlayer()
     {
         float xValue = Input.GetAxis("Horizontal") * Time.fixedDeltaTime * moveSpeed;
         float yValue = 0f;
@@ -21,7 +22,7 @@ public class Mover : MonoBehaviour
         Vector3 movement = new Vector3(xValue, yValue, zValue);
         myRigidBody.MovePosition(myRigidBody.position + movement);
     }
-    void MovePlayerTanky()
+    public void MovePlayerTanky()
     {
         float moveInput = Input.GetAxis("Vertical") * moveSpeed * Time.fixedDeltaTime;
         float turnInput = Input.GetAxis("Horizontal") * rotationSpeed * Time.fixedDeltaTime;
@@ -49,13 +50,16 @@ public class Mover : MonoBehaviour
     }
     void FixedUpdate()
     {
-        if(TankyMovement == true)
+        if(canMove == true)
         {
-            MovePlayerTanky();  
-        }
-        else
-        {
-            MovePlayer();  
+            if(TankyMovement == true)
+            {
+                MovePlayerTanky();  
+            }
+            else
+            {
+                MovePlayer();  
+            }
         }
     }
 
