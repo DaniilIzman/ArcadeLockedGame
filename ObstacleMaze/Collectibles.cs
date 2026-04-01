@@ -11,13 +11,12 @@ public class Collectibles : MonoBehaviour
         Scoring scoring = FindAnyObjectByType<Scoring>();
         if(gameObject.tag == "HP" && other.gameObject.tag == "Player" && scoring.BumpMaxActivate == true)
         {
-            scoring.bumpCounter -= AdditionalBumps;
-            scoring.bumpCounter = Mathf.Max(scoring.bumpCounter, 0);
-            Destroy(gameObject);
-        }
-        else if(other.gameObject.tag == "Player")
-        {
-            Destroy(gameObject);
-        }
+            if(scoring.bumpCounter > 0)
+            {
+                scoring.bumpCounter -= AdditionalBumps;
+                scoring.bumpCounter = Mathf.Max(scoring.bumpCounter, 0);
+                Destroy(gameObject);
+            }
+        } 
     }
 }
