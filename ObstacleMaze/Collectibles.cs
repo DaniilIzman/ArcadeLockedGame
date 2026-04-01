@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections;
 public class Collectibles : MonoBehaviour
 {
     [SerializeField] float FreezeTimer = 0f;
@@ -14,18 +14,10 @@ public class Collectibles : MonoBehaviour
         scoring = FindAnyObjectByType<Scoring>();
         mover = FindAnyObjectByType<Mover>();
     }
-    void Update()
+    IEnumerator UnfreezeAfter(float time)
     {
-        if(frozen == true && FreezeTimer > 0f)
-        {
-            FreezeTimer -= Time.deltaTime;
-            if(FreezeTimer <= 0f)
-            {
-                frozen = false;
-                mover.canMove = true;
-                Destroy(gameObject);
-            }
-        }
+        yield return new WaitForSeconds(time);
+        mover.canMove = true;
     }
     void OnTriggerEnter(Collider other)
     {
@@ -41,7 +33,8 @@ public class Collectibles : MonoBehaviour
         else if(gameObject.tag == "Freezer" && other.gameObject.tag == "Player")
         {
             mover.canMove = false;
-            frozen = true;
+            mover.StartCoroutine(UnfreezeAfter(FreezeTimer));
+            Destroy(gameObject);
         }
     }
 }
