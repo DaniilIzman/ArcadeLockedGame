@@ -54,12 +54,7 @@ public class Collectibles : MonoBehaviour
                 StartCoroutine(ResetSpeed(originalSpeed, originalRotationSpeed, SpeedTimer));
                 Destroy(gameObject);
             }
-            else
-            {
-                mover.moveSpeed = mover.moveSpeed * SpeedMultiplier;
-                mover.rotationSpeed = mover.rotationSpeed * SpeedMultiplier;
-                Destroy(gameObject);
-            }
+            Destroy(gameObject);
         }
     }
 }
