@@ -7,9 +7,10 @@ public class Collectibles : MonoBehaviour
     [SerializeField] bool SpeedTimerActivate;
     [SerializeField] float SpeedTimer = 0f;
     [SerializeField] int AdditionalBumps = 0;
-    //[SerializeField] float InvulnerabilityTimer = 0f;
+    [SerializeField] float InvulnerabilityTimer = 0f;
     Scoring scoring;
     Mover mover;
+    bool isinvulnerable = false;
     void Awake()
     {
         scoring = FindAnyObjectByType<Scoring>();
@@ -25,6 +26,12 @@ public class Collectibles : MonoBehaviour
         yield return new WaitForSeconds(time);
         mover.moveSpeed = originalSpeed;
         mover.rotationSpeed = originalRotationSpeed;
+    }
+    IEnumerator ResetInvulnerability(float time)
+    {
+        yield return new WaitForSeconds(time);
+        isinvulnerable = false;
+        scoring.BumpMaxActivate = true;
     }
     void OnTriggerEnter(Collider other)
     {
@@ -54,6 +61,16 @@ public class Collectibles : MonoBehaviour
                 mover.StartCoroutine(ResetSpeed(originalSpeed, originalRotationSpeed, SpeedTimer));
             }
             Destroy(gameObject);
+        }
+        if(gameObject.tag == "Invulnerability" && other.gameObject.tag == "Player" && scoring.BumpMaxActivate == true)
+        {
+            isinvulnerable = true;
+            if(isinvulnerable == true)
+            {
+                scoring.BumpMaxActivate = false;
+                mover.StartCoroutine(ResetInvulnerability(InvulnerabilityTimer));
+                Destroy(gameObject);
+            }
         }
     }
 }
