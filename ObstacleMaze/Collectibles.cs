@@ -47,12 +47,11 @@ public class Collectibles : MonoBehaviour
         {
             float originalSpeed = mover.moveSpeed;
             float originalRotationSpeed = mover.rotationSpeed;
+            mover.moveSpeed = mover.moveSpeed * SpeedMultiplier;
+            mover.rotationSpeed = mover.rotationSpeed * SpeedMultiplier;
             if(SpeedTimerActivate == true && SpeedTimer > 0f && SpeedMultiplier > 0f)
             {
-                mover.moveSpeed = mover.moveSpeed * SpeedMultiplier;
-                mover.rotationSpeed = mover.rotationSpeed * SpeedMultiplier;
-                StartCoroutine(ResetSpeed(originalSpeed, originalRotationSpeed, SpeedTimer));
-                Destroy(gameObject);
+                mover.StartCoroutine(ResetSpeed(originalSpeed, originalRotationSpeed, SpeedTimer));
             }
             Destroy(gameObject);
         }
