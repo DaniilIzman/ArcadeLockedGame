@@ -3,9 +3,9 @@ using UnityEngine;
 public class Mover : MonoBehaviour
 {
     [SerializeField] bool TankyMovement;
-    [SerializeField] float moveSpeed = 0f;
+    public float moveSpeed = 0f;
     [SerializeField] bool MoveWhileRotating;
-    [SerializeField] float rotationSpeed = 0f;
+    public float rotationSpeed = 0f;
     public bool canMove = true;
     Rigidbody myRigidBody;
     void Start()
