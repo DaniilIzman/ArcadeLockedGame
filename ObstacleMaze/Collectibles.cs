@@ -3,7 +3,9 @@ using System.Collections;
 public class Collectibles : MonoBehaviour
 {
     [SerializeField] float FreezeTimer = 0f;
-    //[SerializeField] float SpeedMultiplier = 0f;
+    [SerializeField] float SpeedMultiplier = 0f;
+    [SerializeField] bool SpeedTimerActivate;
+    [SerializeField] float SpeedTimer = 0f;
     [SerializeField] int AdditionalBumps = 0;
     //[SerializeField] float InvulnerabilityTimer = 0f;
     Scoring scoring;
@@ -17,6 +19,12 @@ public class Collectibles : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         mover.canMove = true;
+    }
+    IEnumerator ResetSpeed(float originalSpeed, float originalRotationSpeed, float time)
+    {
+        yield return new WaitForSeconds(time);
+        mover.moveSpeed = originalSpeed;
+        mover.rotationSpeed = originalRotationSpeed;
     }
     void OnTriggerEnter(Collider other)
     {
@@ -34,6 +42,24 @@ public class Collectibles : MonoBehaviour
             mover.canMove = false;
             mover.StartCoroutine(UnfreezeAfter(FreezeTimer));
             Destroy(gameObject);
+        }
+        if(gameObject.tag == "Speed" && other.gameObject.tag == "Player")
+        {
+            float originalSpeed = mover.moveSpeed;
+            float originalRotationSpeed = mover.rotationSpeed;
+            if(SpeedTimerActivate == true && SpeedTimer > 0f && SpeedMultiplier > 0f)
+            {
+                mover.moveSpeed = mover.moveSpeed * SpeedMultiplier;
+                mover.rotationSpeed = mover.rotationSpeed * SpeedMultiplier;
+                StartCoroutine(ResetSpeed(originalSpeed, originalRotationSpeed, SpeedTimer));
+                Destroy(gameObject);
+            }
+            else
+            {
+                mover.moveSpeed = mover.moveSpeed * SpeedMultiplier;
+                mover.rotationSpeed = mover.rotationSpeed * SpeedMultiplier;
+                Destroy(gameObject);
+            }
         }
     }
 }
