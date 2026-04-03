@@ -8,7 +8,7 @@ public class Scoring : MonoBehaviour
     public int bumpCounter = 0;
     void OnCollisionEnter(Collision other)
     {
-        if(other.gameObject.tag != "Hit" && other.gameObject.tag != "Ground" && BumpMaxActivate == true)
+        if(!other.gameObject.CompareTag("Hit") && !other.gameObject.CompareTag("Ground") && BumpMaxActivate)
         {
             bumpCounter++;
             Debug.Log("You've bumped into objects " + bumpCounter + " times"); 
