@@ -24,7 +24,7 @@ public class ObjectHitAction : MonoBehaviour
     }
     void OnCollisionEnter(Collision other)
     {
-        if(other.gameObject.tag == "Player")
+        if(other.gameObject.CompareTag("Player"))
         {
             ObjectTouched = true;
             GetComponent<MeshRenderer>().material.color = ColorHit;

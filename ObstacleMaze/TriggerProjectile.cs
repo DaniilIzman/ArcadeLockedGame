@@ -7,7 +7,7 @@ public class TriggerProjectile : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Player")
+        if(other.CompareTag("Player"))
         {
             for(int i = 0; i < GameObjectList.Count; i++)
             {

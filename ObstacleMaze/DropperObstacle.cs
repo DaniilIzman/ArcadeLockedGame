@@ -36,7 +36,7 @@ public class DropperObstacle : MonoBehaviour
     }
     void OnCollisionEnter(Collision other)
     {
-        if(other.gameObject.tag == "Ground")
+        if(other.gameObject.CompareTag("Player"))
         {
             if(StaysOnTheGround == true)
             {
