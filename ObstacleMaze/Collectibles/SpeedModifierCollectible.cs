@@ -20,7 +20,7 @@ public class SpeedModifierCollectible : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
-        if(gameObject.tag == "Speed" && other.gameObject.tag == "Player")
+        if(other.CompareTag("Player"))
         {
             float originalSpeed = mover.moveSpeed;
             float originalRotationSpeed = mover.rotationSpeed;

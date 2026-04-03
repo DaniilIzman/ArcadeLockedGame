@@ -11,7 +11,7 @@ public class HPCollectible : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
-        if(gameObject.tag == "HP" && other.gameObject.tag == "Player" && scoring.BumpMaxActivate == true)
+        if(other.CompareTag("Player"))
         {
             if(scoring.bumpCounter > 0)
             {

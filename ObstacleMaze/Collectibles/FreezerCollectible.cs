@@ -17,7 +17,7 @@ public class FreezerCollectible : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
-        if(gameObject.tag == "Freezer" && other.gameObject.tag == "Player")
+        if(other.CompareTag("Player"))
         {
             mover.canMove = false;
             mover.StartCoroutine(UnfreezeAfter(FreezeTimer));
