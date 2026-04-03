@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class Scoring : MonoBehaviour
 {
-    
     [SerializeField] int BumpMax;
     public bool BumpMaxActivate;
     public int bumpCounter = 0;
