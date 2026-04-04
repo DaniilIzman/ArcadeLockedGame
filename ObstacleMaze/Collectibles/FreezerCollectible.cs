@@ -20,6 +20,7 @@ public class FreezerCollectible : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             mover.canMove = false;
+            mover.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
             mover.StartCoroutine(UnfreezeAfter(FreezeTimer));
             Destroy(gameObject);
         }
