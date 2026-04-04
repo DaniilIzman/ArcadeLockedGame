@@ -7,7 +7,7 @@ public class DropperObstacle : MonoBehaviour
     [SerializeField] float GroundTimer = 0f;
     MeshRenderer myMeshRenderer;
     bool OnGround = false;
-
+    
     Rigidbody myRigidBody;
     void Start()
     {
@@ -27,6 +27,7 @@ public class DropperObstacle : MonoBehaviour
         }
         if(OnGround == true && GroundTimer >= 0f)
         {
+            myRigidBody.useGravity = false;
             GroundTimer -= Time.deltaTime;
             if(GroundTimer <= 0f)
             {
@@ -36,8 +37,11 @@ public class DropperObstacle : MonoBehaviour
     }
     void OnCollisionEnter(Collision other)
     {
-        if(other.gameObject.CompareTag("Player"))
+        if(other.gameObject.CompareTag("Ground"))
         {
+            myRigidBody.angularVelocity = Vector3.zero;
+            myRigidBody.linearVelocity = Vector3.zero;
+            myRigidBody.isKinematic = true;
             if(StaysOnTheGround == true)
             {
                 OnGround = true;
