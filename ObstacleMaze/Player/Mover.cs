@@ -16,37 +16,24 @@ public class Mover : MonoBehaviour
 
     public void MovePlayer()
     {
-        float xValue = Input.GetAxis("Horizontal") * Time.fixedDeltaTime * moveSpeed;
-        float yValue = 0f;
-        float zValue = Input.GetAxis("Vertical") * Time.fixedDeltaTime * moveSpeed;
-        Vector3 movement = new Vector3(xValue, yValue, zValue);
-        myRigidBody.MovePosition(myRigidBody.position + movement);
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+
+        Vector3 direction = new Vector3(x, 0f, z).normalized;
+
+        myRigidBody.linearVelocity = direction * moveSpeed;
     }
     public void MovePlayerTanky()
     {
-        float moveInput = Input.GetAxis("Vertical") * moveSpeed * Time.fixedDeltaTime;
-        float turnInput = Input.GetAxis("Horizontal") * rotationSpeed * Time.fixedDeltaTime;
-        if(MoveWhileRotating == false)
-        {
-            if (Mathf.Abs(turnInput) > 0.01f)
-            {
-                    Quaternion rotation = Quaternion.Euler(0f, turnInput, 0f);
-                    myRigidBody.MoveRotation(myRigidBody.rotation * rotation);
-            }
-            else
-            {
-                    Vector3 movement = transform.forward * moveInput;
-                    myRigidBody.MovePosition(myRigidBody.position + movement);
-            }
-        }
-        else
-        {
-            Vector3 movement = transform.forward * moveInput;
-            myRigidBody.MovePosition(myRigidBody.position + movement);
-            Quaternion rotation = Quaternion.Euler(0f, turnInput, 0f);
-            myRigidBody.MoveRotation(myRigidBody.rotation * rotation);
-        }
+        float moveInput = Input.GetAxis("Vertical");
+        float turnInput = Input.GetAxis("Horizontal");
 
+        Vector3 movement = transform.forward * moveInput * moveSpeed;
+        myRigidBody.linearVelocity = movement;
+        
+        float rotationAmount = turnInput * rotationSpeed * Time.fixedDeltaTime;
+        Quaternion rotation = Quaternion.Euler(0f, rotationAmount, 0f);
+        myRigidBody.MoveRotation(myRigidBody.rotation * rotation);
     }
     void FixedUpdate()
     {
