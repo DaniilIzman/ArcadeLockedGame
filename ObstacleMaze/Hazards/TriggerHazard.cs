@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerProjectile : MonoBehaviour
+public class TriggerHazard : MonoBehaviour
 {
-    [SerializeField] List<GameObject> GameObjectList;
+    public List<GameObject> GameObjectList;
 
     void OnTriggerEnter(Collider other)
     {
