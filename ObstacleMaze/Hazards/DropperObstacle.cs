@@ -8,30 +8,29 @@ public class DropperObstacle : MonoBehaviour
     [SerializeField] float GroundTimer = 0f;
     TriggerHazard Trigger;
     MeshRenderer myMeshRenderer;
+    float StartTimerBeforeFall;
     bool OnGround = false;
-    
-    Rigidbody myRigidBody;
 
-    void Awake() 
+    Rigidbody myRigidBody;
+    void Start()
     {
+        myMeshRenderer = GetComponent<MeshRenderer>();
+        myRigidBody = GetComponent<Rigidbody>();
         Trigger = FindAnyObjectByType<TriggerHazard>();
         if(Trigger.GameObjectList.Contains(gameObject))
         {
             gameObject.SetActive(false); 
         }
-    }
-    void Start()
-    {
-        myMeshRenderer = GetComponent<MeshRenderer>();
-        myRigidBody = GetComponent<Rigidbody>();
-
         myMeshRenderer.enabled = false;
         myRigidBody.useGravity = false;
     }
-
+    void OnEnable()
+    {
+        StartTimerBeforeFall = Time.time;
+    }
     void Update()
     {
-        if(FallAfterTimer == true && Time.time >= TimeBeforeFall)
+        if(FallAfterTimer == true && OnGround == false && Time.time >= StartTimerBeforeFall + TimeBeforeFall)
         {
             myMeshRenderer.enabled = true;
             myRigidBody.useGravity = true;
@@ -45,7 +44,6 @@ public class DropperObstacle : MonoBehaviour
                 }
             }
         }
-
     }
     void OnCollisionEnter(Collision other)
     {
