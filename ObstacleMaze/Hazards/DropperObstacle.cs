@@ -2,9 +2,11 @@ using UnityEngine;
 
 public class DropperObstacle : MonoBehaviour
 {
+    [SerializeField] bool FallAfterTimer;
     [SerializeField] float TimeBeforeFall = 3f;
     [SerializeField] bool StaysOnTheGround;
     [SerializeField] float GroundTimer = 0f;
+    [SerializeField] bool FallOnTrigger;
     MeshRenderer myMeshRenderer;
     bool OnGround = false;
     
