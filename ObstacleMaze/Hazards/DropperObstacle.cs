@@ -38,15 +38,15 @@ public class DropperObstacle : MonoBehaviour
         {
             myMeshRenderer.enabled = true;
             myRigidBody.useGravity = true;
-            if(OnGround == true && GroundTimer >= 0f)
-            {
+        }
+        if(OnGround == true && GroundTimer >= 0f)
+        {
                 myRigidBody.useGravity = false;
                 GroundTimer -= Time.deltaTime;
                 if(GroundTimer <= 0f)
                 {
                     Destroy(gameObject);
                 }
-            }
         }
     }
     void OnCollisionEnter(Collision other)
