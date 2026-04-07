@@ -12,15 +12,19 @@ public class DropperObstacle : MonoBehaviour
     bool OnGround = false;
 
     Rigidbody myRigidBody;
-    void Start()
+    void Awake()
     {
-        myMeshRenderer = GetComponent<MeshRenderer>();
-        myRigidBody = GetComponent<Rigidbody>();
         Trigger = FindAnyObjectByType<TriggerHazard>();
         if(Trigger.GameObjectList.Contains(gameObject))
         {
             gameObject.SetActive(false); 
         }
+    }
+    void Start()
+    {
+        myMeshRenderer = GetComponent<MeshRenderer>();
+        myRigidBody = GetComponent<Rigidbody>();
+
         myMeshRenderer.enabled = false;
         myRigidBody.useGravity = false;
     }
