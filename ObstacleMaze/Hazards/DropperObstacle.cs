@@ -25,6 +25,14 @@ public class DropperObstacle : MonoBehaviour
         myMeshRenderer = GetComponent<MeshRenderer>();
         myRigidBody = GetComponent<Rigidbody>();
         TriggerHazard[] triggers = FindObjectsByType<TriggerHazard>(FindObjectsSortMode.None);
+        foreach (TriggerHazard trigger in triggers)
+        {
+            if (trigger.GameObjectList.Contains(gameObject))
+            {
+                gameObject.SetActive(false);
+                break;
+            }
+        }
         myMeshRenderer.enabled = false;
         myRigidBody.useGravity = false;
     }
