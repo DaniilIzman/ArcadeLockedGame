@@ -2,15 +2,18 @@ using UnityEngine;
 
 public class Spikes : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] float UpValue = 0f;
+    [SerializeField] float ActivationTimer = 0f;
+    [SerializeField] float SpikedTimer = 0f;
+    float SaveInitialTimer = 0f;
     void Start()
     {
-        
+        SaveInitialTimer = ActivationTimer;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if(Time.time >= ActivationTimer + SaveInitialTimer)
+        transform.Translate(0f, UpValue, 0f);
     }
 }
