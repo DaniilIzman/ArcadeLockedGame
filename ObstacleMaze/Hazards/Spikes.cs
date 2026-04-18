@@ -8,12 +8,11 @@ public class Spikes : MonoBehaviour
     float timer = 0f;
     float SaveInitialTimer = 0f;
     bool IsUp = false;
-    Transform SpikePosition;
     Vector3 InitialPosition;
     Vector3 upPosition;
     void Start()
     {
-        InitialPosition = SpikePosition.transform.position;
+        InitialPosition = transform.position;
         upPosition = InitialPosition + new Vector3(0f, UpValue, 0f);
     }
 
