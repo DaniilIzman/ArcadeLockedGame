@@ -53,14 +53,14 @@ public class Spikes : MonoBehaviour
             myMeshRenderer.enabled = true;
             transform.position = upPosition;
             IsUp = true;
-            //timer = 0f;
+            TimerBeforeActivation = Time.time;
         }
         else if(IsUp && Time.time >= SpikedTimer + TimerBeforeActivation)
         {
-            myMeshRenderer.enabled = true;
+            //myMeshRenderer.enabled = false;
             transform.position = InitialPosition;
             IsUp = false;
-            //timer = 0f;
+            TimerBeforeActivation = Time.time;
         }
     }
 }
