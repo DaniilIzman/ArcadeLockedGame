@@ -5,13 +5,17 @@ public class Spikes : MonoBehaviour
     [SerializeField] float UpValue = 0f;
     [SerializeField] float ActivationTimer = 0f;
     [SerializeField] float SpikedTimer = 0f;
+    float TimerBeforeActivation = 0f;
     float timer = 0f;
+
     bool IsUp = false;
+    
     Vector3 InitialPosition;
     Vector3 upPosition;
+    
     TriggerHazard Trigger;
-    MeshRenderer myMeshRenderer;
-    float TimerBeforeActivation = 0f;
+    MeshRenderer SpikeRenderer;
+
     void Awake()
     {
         Trigger = FindAnyObjectByType<TriggerHazard>();
@@ -24,7 +28,7 @@ public class Spikes : MonoBehaviour
     {
         InitialPosition = transform.position;
         upPosition = InitialPosition + new Vector3(0f, UpValue, 0f);
-        myMeshRenderer = GetComponent<MeshRenderer>();
+        SpikeRenderer = GetComponent<MeshRenderer>();
         TriggerHazard[] triggers1 = FindObjectsByType<TriggerHazard>(FindObjectsSortMode.None);
         foreach (TriggerHazard trigger in triggers1)
         {
@@ -34,8 +38,9 @@ public class Spikes : MonoBehaviour
                 break;
             }
         }
-        myMeshRenderer.enabled = false;
+        SpikeRenderer.enabled = false;
     }
+
     void OnEnable()
     {
         TimerBeforeActivation = Time.time;
@@ -45,19 +50,21 @@ public class Spikes : MonoBehaviour
     {
         SpikesBehaviour();
     }
+
     void SpikesBehaviour()
     {
         timer += Time.deltaTime;
+
         if(!IsUp && Time.time >= ActivationTimer + TimerBeforeActivation)
         {
-            myMeshRenderer.enabled = true;
+            SpikeRenderer.enabled = true;
             transform.position = upPosition;
             IsUp = true;
             TimerBeforeActivation = Time.time;
         }
+
         else if(IsUp && Time.time >= SpikedTimer + TimerBeforeActivation)
         {
-            //myMeshRenderer.enabled = false;
             transform.position = InitialPosition;
             IsUp = false;
             TimerBeforeActivation = Time.time;
