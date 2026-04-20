@@ -4,8 +4,8 @@ public class ObjectHitAction : MonoBehaviour
 {
     [SerializeField] Color ColorHit;
     [SerializeField] bool ResetAfterTimer;
-    [SerializeField] float ResetTimer = 0f;
-    bool ObjectTouched;
+    public float ResetTimer = 0f;
+    public bool ObjectTouched;
     Color defaultColor;
     float initialTime = 0f;
     string initialTag;
