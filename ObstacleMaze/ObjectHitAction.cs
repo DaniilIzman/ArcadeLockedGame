@@ -9,6 +9,7 @@ public class ObjectHitAction : MonoBehaviour
     Color defaultColor;
     float initialTime = 0f;
     string initialTag;
+    [SerializeField] bool DestroyUponHit;
     void Start()
     {
         defaultColor = GetComponent<MeshRenderer>().material.color;
@@ -29,6 +30,10 @@ public class ObjectHitAction : MonoBehaviour
             ObjectTouched = true;
             GetComponent<MeshRenderer>().material.color = ColorHit;
             gameObject.tag = "Hit";
+            if(DestroyUponHit)
+            {
+                Destroy(gameObject);
+            }
         }
     }
     void ResetToDefault()
