@@ -23,7 +23,7 @@ public class ScoringScore : MonoBehaviour
 
         else if(MoveCheck < 0)
         {
-            ScoreCounter -= ScorePenalty;
+            ScoreCounter += MoveCheck * ScorePenalty;
             Debug.Log("Moving back. Score penalty: " + ScoreCounter);
         }
 
