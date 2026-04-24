@@ -1,16 +1,35 @@
 using UnityEngine;
-
-public class ScoreMultiplier : MonoBehaviour
+using System.Collections;
+public class ScoreMultiplierCollectible : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] float MyScoreMultiplier = 0f;
+    [SerializeField] bool ScoreTimerActivate;
+    [SerializeField] float ScoreMultiplierTimer = 0f;
+    ScoringScore Score;
+
+    void Awake()
     {
-        
+        Score = FindAnyObjectByType<ScoringScore>();
+    }
+    IEnumerator ResetScoreMultiplier(float originalMultiplier, float time)
+    {
+        yield return new WaitForSeconds(time);
+        Score.ScoreMultiplier = originalMultiplier;
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnTriggerEnter(Collider other)
     {
-        
+        if(other.CompareTag("Player"))
+        {
+            float originalMultiplier = Score.ScoreMultiplier;
+            Score.ScoreMultiplier = MyScoreMultiplier;
+            if(ScoreTimerActivate == true && ScoreMultiplierTimer > 0f && MyScoreMultiplier > 0f)
+            {
+                Debug.Log("Score multiplier activated!");
+                Score.StartCoroutine(ResetScoreMultiplier(originalMultiplier, ScoreMultiplierTimer));
+            }
+            Destroy(gameObject);
+            
+        }
     }
 }
