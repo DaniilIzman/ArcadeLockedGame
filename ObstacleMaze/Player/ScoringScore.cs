@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class ScoringScore : MonoBehaviour
 {
-    float ScoreCounter = 0f;
+    public float ScoreCounter = 0f;
     Vector3 lastPosition;
-    float MoveCheck = 0f;
+    public float MoveCheck = 0f;
+    public float ScoreMultiplier = 1f;
     [SerializeField] float ScorePenalty = 0f;
     void Start()
     {
@@ -17,13 +18,13 @@ public class ScoringScore : MonoBehaviour
         
         if(MoveCheck > 0f)
         {
-            ScoreCounter += MoveCheck;
+            ScoreCounter += MoveCheck * ScoreMultiplier;
             Debug.Log("Moving forward. Score: " + ScoreCounter);
         }
 
         else if(MoveCheck < 0)
         {
-            ScoreCounter += MoveCheck * ScorePenalty;
+            ScoreCounter += MoveCheck * ScorePenalty * ScoreMultiplier;
             Debug.Log("Moving back. Score penalty: " + ScoreCounter);
         }
 
