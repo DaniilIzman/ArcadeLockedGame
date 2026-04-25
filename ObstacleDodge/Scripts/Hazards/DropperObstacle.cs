@@ -8,10 +8,10 @@ public class DropperObstacle : MonoBehaviour
     [SerializeField] float GroundTimer = 0f;
     TriggerHazard Trigger;
     MeshRenderer myMeshRenderer;
-    float StartTimerBeforeFall;
     bool OnGround = false;
-
+    float StartTimerBeforeFall;
     Rigidbody myRigidBody;
+
     void Awake()
     {
         Trigger = FindAnyObjectByType<TriggerHazard>();
