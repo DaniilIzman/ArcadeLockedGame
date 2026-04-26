@@ -7,7 +7,7 @@ public class NewSectionCreator : MonoBehaviour
     {
         if(other.gameObject.CompareTag("TriggerExtender"))
         {
-            Instantiate(Tile, new Vector3(7, 2, 35), Quaternion.identity);
+            Instantiate(Tile, new Vector3(7, 2, 42), Quaternion.identity);
         }
     }
     void Update()
