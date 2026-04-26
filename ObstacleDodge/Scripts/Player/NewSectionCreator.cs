@@ -2,13 +2,14 @@ using UnityEngine;
 
 public class NewSectionCreator : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public GameObject Tile;
+    void OnTriggerEnter(Collider other)
     {
-        
+        if(other.CompareTag("TriggerExtender"))
+        {
+            Instantiate(Tile, new Vector3(7, 2, 57), Quaternion.identity);
+        }
     }
-
-    // Update is called once per frame
     void Update()
     {
         
