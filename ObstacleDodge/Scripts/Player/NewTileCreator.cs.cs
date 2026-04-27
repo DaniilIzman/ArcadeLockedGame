@@ -1,17 +1,14 @@
 using UnityEngine;
 
-public class NewSectionCreator : MonoBehaviour
+public class NewTileCreator : MonoBehaviour
 {
-    public GameObject Tile;
     void OnTriggerEnter(Collider other)
     {
+        TriggerExtender extender = other.GetComponent<TriggerExtender>();
+        Vector3 spawnPosition = extender.transform.position + extender.SpawnOffset;
         if(other.gameObject.CompareTag("TriggerExtender"))
         {
-            Instantiate(Tile, new Vector3(7, 2, 42), Quaternion.identity);
+            Instantiate(extender.TilePrefab, spawnPosition, Quaternion.identity);      
         }
-    }
-    void Update()
-    {
-        
     }
 }
