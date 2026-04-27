@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TileDestroyer : MonoBehaviour
+public class TileMover : MonoBehaviour
 {
 
     void Update()
