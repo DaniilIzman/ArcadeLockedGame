@@ -2,15 +2,16 @@ using UnityEngine;
 
 public class MovementOD : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] float strafeSpeed = 0f;
+    Rigidbody myRigidBody;
     void Start()
     {
-        
+        myRigidBody = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        float xValue = Input.GetAxis("Horizontal");
+        myRigidBody.linearVelocity = new Vector3(xValue * strafeSpeed, myRigidBody.linearVelocity.y, myRigidBody.linearVelocity.z);
     }
 }
