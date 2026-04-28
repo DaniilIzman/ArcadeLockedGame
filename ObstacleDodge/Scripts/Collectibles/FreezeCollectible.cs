@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-public class FreezerCollectible : MonoBehaviour
+public class FreezeCollectible : MonoBehaviour
 {
     [SerializeField] float FreezeTimer = 0f;
     HealthOD PlayerHealth;

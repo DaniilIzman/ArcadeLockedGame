@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class MovementOD : MonoBehaviour
 {
-    [SerializeField] float strafeSpeed = 0f;
+    public float strafeSpeed = 0f;
     Rigidbody myRigidBody;
-    public float moveSpeed = 0f;
     public bool canMove = true;
     void Start()
     {

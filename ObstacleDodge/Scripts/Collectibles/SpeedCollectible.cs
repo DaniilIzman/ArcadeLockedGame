@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-public class SpeedModifierCollectible : MonoBehaviour
+public class SpeedCollectible : MonoBehaviour
 {
     [SerializeField] float SpeedMultiplier = 0f;
     [SerializeField] bool SpeedTimerActivate;
@@ -13,14 +13,14 @@ public class SpeedModifierCollectible : MonoBehaviour
     IEnumerator ResetSpeed(float originalSpeed, float originalRotationSpeed, float time)
     {
         yield return new WaitForSeconds(time);
-        PlayerMovement.moveSpeed = originalSpeed;
+        PlayerMovement.strafeSpeed = originalSpeed;
     }
     void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Player"))
         {
-            float originalSpeed = PlayerMovement.moveSpeed;
-            PlayerMovement.moveSpeed = PlayerMovement.moveSpeed * SpeedMultiplier;
+            float originalSpeed = PlayerMovement.strafeSpeed;
+            PlayerMovement.strafeSpeed = PlayerMovement.strafeSpeed * SpeedMultiplier;
             if(SpeedTimerActivate == true && SpeedTimer > 0f && SpeedMultiplier > 0f)
             {
                 PlayerMovement.StartCoroutine(ResetSpeed(originalSpeed, 0f, SpeedTimer));

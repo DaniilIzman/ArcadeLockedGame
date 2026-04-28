@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-public class ScoreMultiplierCollectible : MonoBehaviour
+public class ScoreCollectible : MonoBehaviour
 {
     [SerializeField] float MyScoreMultiplier = 0f;
     [SerializeField] bool ScoreTimerActivate;
