@@ -5,30 +5,25 @@ public class SpeedModifierCollectible : MonoBehaviour
     [SerializeField] float SpeedMultiplier = 0f;
     [SerializeField] bool SpeedTimerActivate;
     [SerializeField] float SpeedTimer = 0f;
-    Scoring scoring;
-    Mover mover;
+    MovementOD PlayerMovement;
     void Awake()
     {
-        scoring = FindAnyObjectByType<Scoring>();
-        mover = FindAnyObjectByType<Mover>();
+        PlayerMovement = FindAnyObjectByType<MovementOD>();
     }
     IEnumerator ResetSpeed(float originalSpeed, float originalRotationSpeed, float time)
     {
         yield return new WaitForSeconds(time);
-        mover.moveSpeed = originalSpeed;
-        mover.rotationSpeed = originalRotationSpeed;
+        PlayerMovement.moveSpeed = originalSpeed;
     }
     void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Player"))
         {
-            float originalSpeed = mover.moveSpeed;
-            float originalRotationSpeed = mover.rotationSpeed;
-            mover.moveSpeed = mover.moveSpeed * SpeedMultiplier;
-            mover.rotationSpeed = mover.rotationSpeed * SpeedMultiplier;
+            float originalSpeed = PlayerMovement.moveSpeed;
+            PlayerMovement.moveSpeed = PlayerMovement.moveSpeed * SpeedMultiplier;
             if(SpeedTimerActivate == true && SpeedTimer > 0f && SpeedMultiplier > 0f)
             {
-                mover.StartCoroutine(ResetSpeed(originalSpeed, originalRotationSpeed, SpeedTimer));
+                PlayerMovement.StartCoroutine(ResetSpeed(originalSpeed, 0f, SpeedTimer));
             }
             Destroy(gameObject);
         }

@@ -3,25 +3,25 @@ using System.Collections;
 public class FreezerCollectible : MonoBehaviour
 {
     [SerializeField] float FreezeTimer = 0f;
-    Scoring scoring;
-    Mover mover;
+    HealthOD PlayerHealth;
+    MovementOD PlayerMovement;
     void Awake()
     {
-        scoring = FindAnyObjectByType<Scoring>();
-        mover = FindAnyObjectByType<Mover>();
+        PlayerHealth = FindAnyObjectByType<HealthOD>();
+        PlayerMovement = FindAnyObjectByType<MovementOD>();
     }
     IEnumerator UnfreezeAfter(float time)
     {
         yield return new WaitForSeconds(time);
-        mover.canMove = true;
+        PlayerMovement.canMove = true;
     }
     void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Player"))
         {
-            mover.canMove = false;
-            mover.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
-            mover.StartCoroutine(UnfreezeAfter(FreezeTimer));
+            PlayerMovement.canMove = false;
+            PlayerMovement.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+            PlayerMovement.StartCoroutine(UnfreezeAfter(FreezeTimer));
             Destroy(gameObject);
         }
     }
