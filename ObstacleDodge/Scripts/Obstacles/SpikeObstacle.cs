@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Spikes : MonoBehaviour
+public class SpikeObstacle : MonoBehaviour
 {
     [SerializeField] float UpValue = 0f;
     [SerializeField] float ActivationTimer = 0f;

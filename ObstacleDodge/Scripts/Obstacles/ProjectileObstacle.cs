@@ -1,7 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class FlyAtPlayer : MonoBehaviour
+public class ProjectileObstacle : MonoBehaviour
 {
     [SerializeField] float ProjectileSpeed = 0f;
     [SerializeField] Transform player;
