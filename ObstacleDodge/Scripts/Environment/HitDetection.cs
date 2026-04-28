@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ObjectHitAction : MonoBehaviour
+public class HitDetection : MonoBehaviour
 {
     [SerializeField] Color ColorHit;
     [SerializeField] bool ResetAfterTimer;

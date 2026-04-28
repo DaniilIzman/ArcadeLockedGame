@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class Scoring : MonoBehaviour
+public class HealthOD : MonoBehaviour
 {
     [SerializeField] int BumpMax;
     public bool BumpMaxActivate;
