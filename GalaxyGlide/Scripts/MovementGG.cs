@@ -1,16 +1,20 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MovementGG : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] InputAction Up;
+
+    void OnEnable()
     {
-        
+        Up.Enable();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if(Up.IsPressed())
+        {
+            Debug.Log("Up button is pressed!");
+        }
     }
 }
