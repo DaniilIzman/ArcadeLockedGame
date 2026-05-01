@@ -2,15 +2,22 @@ using UnityEngine;
 
 public class CollisionDetectorGG : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void OnCollisionEnter(Collision other)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        switch (other.gameObject.tag)
+        {
+            case "Spawn":
+                Debug.Log("Spawnpoint");
+                break;
+            case "Obstacle":
+                Debug.Log("Obstacle");
+                break;
+            case "Finish":
+                Debug.Log("Finish");
+                break;
+            default:
+                Debug.Log("Bumped into unidentified object!");
+                break;
+        }
     }
 }
