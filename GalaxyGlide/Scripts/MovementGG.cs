@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class MovementGG : MonoBehaviour
 {
     [SerializeField] InputAction Up;
+    [SerializeField] InputAction Rotation;
     [SerializeField] float thrustForce = 0f;
     Rigidbody myRigidBody;
     void Start()
@@ -13,13 +14,26 @@ public class MovementGG : MonoBehaviour
     void OnEnable()
     {
         Up.Enable();
+        Rotation.Enable();
     }
 
     void FixedUpdate()
     {
-        if(Up.IsPressed())
+        ThrustController();
+        RotationController();
+    }
+
+    private void ThrustController()
+    {
+        if (Up.IsPressed())
         {
             myRigidBody.AddRelativeForce(Vector3.up * thrustForce * Time.fixedDeltaTime);
         }
+    }
+
+    private void RotationController()
+    {
+        float RotationInput = Rotation.ReadValue<float>();
+        Debug.Log(RotationInput);
     }
 }
