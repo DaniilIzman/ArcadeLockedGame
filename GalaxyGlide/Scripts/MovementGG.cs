@@ -47,6 +47,8 @@ public class MovementGG : MonoBehaviour
 
     private void ApplyRotation(float rotationPerFrame)
     {
+        myRigidBody.freezeRotation = true;
         transform.Rotate(Vector3.forward * rotationPerFrame * Time.fixedDeltaTime);
+        myRigidBody.freezeRotation = false;
     }
 }
