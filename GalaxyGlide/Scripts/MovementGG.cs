@@ -37,11 +37,16 @@ public class MovementGG : MonoBehaviour
         float RotationInput = Rotation.ReadValue<float>();
         if(RotationInput < 0)
         {
-            transform.Rotate(Vector3.forward * rotationForce * Time.fixedDeltaTime);
+            ApplyRotation(rotationForce);
         }
         else if(RotationInput > 0)
         {
-            transform.Rotate(Vector3.back * rotationForce * Time.fixedDeltaTime);
+            ApplyRotation(-rotationForce);
         }
+    }
+
+    private void ApplyRotation(float rotationPerFrame)
+    {
+        transform.Rotate(Vector3.forward * rotationPerFrame * Time.fixedDeltaTime);
     }
 }
