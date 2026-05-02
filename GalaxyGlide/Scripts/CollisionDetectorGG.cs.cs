@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 public class CollisionDetectorGG : MonoBehaviour
 {
@@ -13,17 +14,23 @@ public class CollisionDetectorGG : MonoBehaviour
                 Debug.Log("Obstacle");
                 break;
             case "Finish":
-                Debug.Log("Finish");
+                LoadNextLevelScene();
                 break;
             default:
-                reloadGGgame();
+                ReloadLevelScene();
                 break;
         }
 
-        void reloadGGgame()
+        void ReloadLevelScene()
         {
             int currentScene = SceneManager.GetActiveScene().buildIndex;
             SceneManager.LoadScene(currentScene);
+        }
+
+        void LoadNextLevelScene()
+        {
+            int currentScene = SceneManager.GetActiveScene().buildIndex;
+            SceneManager.LoadScene(currentScene + 1);
         }
     }
 }
