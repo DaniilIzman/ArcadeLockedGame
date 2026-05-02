@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
@@ -17,25 +18,30 @@ public class CollisionDetectorGG : MonoBehaviour
                 LoadNextLevelScene();
                 break;
             default:
-                ReloadLevelScene();
+                EffectsAfterCrash();
                 break;
         }
+    }
 
-        void ReloadLevelScene()
-        {
-            int currentScene = SceneManager.GetActiveScene().buildIndex;
-            SceneManager.LoadScene(currentScene);
-        }
+    void EffectsAfterCrash()
+    {
+        Invoke("ReloadLevelScene", 3f);
+    }
 
-        void LoadNextLevelScene()
+    void ReloadLevelScene()
+    {
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentScene);
+    }
+
+    void LoadNextLevelScene()
+    {
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        int nextScene = currentScene + 1;
+        if(nextScene == SceneManager.sceneCountInBuildSettings)
         {
-            int currentScene = SceneManager.GetActiveScene().buildIndex;
-            int nextScene = currentScene + 1;
-            if(nextScene == SceneManager.sceneCountInBuildSettings)
-            {
-                nextScene = 0;
-            }
-            SceneManager.LoadScene(nextScene);
+            nextScene = 0;
         }
+        SceneManager.LoadScene(nextScene);
     }
 }
