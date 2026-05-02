@@ -22,7 +22,8 @@ public class CollisionDetectorGG : MonoBehaviour
 
         void reloadGGgame()
         {
-            SceneManager.LoadScene(0);
+            int currentScene = SceneManager.GetActiveScene().buildIndex;
+            SceneManager.LoadScene(currentScene);
         }
     }
 }
