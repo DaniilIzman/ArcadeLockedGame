@@ -16,8 +16,13 @@ public class CollisionDetectorGG : MonoBehaviour
                 Debug.Log("Finish");
                 break;
             default:
-                SceneManager.LoadScene(0);
+                reloadGGgame();
                 break;
+        }
+
+        void reloadGGgame()
+        {
+            SceneManager.LoadScene(0);
         }
     }
 }
