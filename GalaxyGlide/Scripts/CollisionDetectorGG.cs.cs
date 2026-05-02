@@ -25,6 +25,7 @@ public class CollisionDetectorGG : MonoBehaviour
 
     void EffectsAfterCrash()
     {
+        GetComponent<MovementGG>().enabled = false;
         Invoke("ReloadLevelScene", 3f);
     }
 
