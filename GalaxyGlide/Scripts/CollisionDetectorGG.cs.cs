@@ -9,6 +9,7 @@ public class CollisionDetectorGG : MonoBehaviour
     [SerializeField] AudioClip VictoryAudio;
     [SerializeField] AudioClip CrashAudio;
     AudioSource AudioSource;
+    bool isControllable = true;
 
     void Start()
     {
@@ -17,21 +18,30 @@ public class CollisionDetectorGG : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-        switch (other.gameObject.tag)
+        if(isControllable == false)
         {
-            case "Spawn":
-                Debug.Log("Spawnpoint");
-                break;
-            case "Obstacle":
-                Debug.Log("Obstacle");
-                break;
-            case "Finish":
-                EffectsAfterFinish();
-                break;
-            default:
-                EffectsAfterCrash();
-                break;
+            return;
         }
+        else
+        {
+            isControllable = true;
+            switch (other.gameObject.tag)
+            {
+                case "Spawn":
+                    Debug.Log("Spawnpoint");
+                    break;
+                case "Obstacle":
+                    Debug.Log("Obstacle");
+                    break;
+                case "Finish":
+                    EffectsAfterFinish();
+                    break;
+                default:
+                    EffectsAfterCrash();
+                    break;
+            } 
+        }
+
     }
 
     void ReloadLevelScene()
@@ -41,6 +51,8 @@ public class CollisionDetectorGG : MonoBehaviour
     }
     void EffectsAfterCrash()
     {
+        isControllable = false;
+        AudioSource.Stop();
         AudioSource.PlayOneShot(CrashAudio);
         GetComponent<MovementGG>().enabled = false;
         Invoke("ReloadLevelScene", LevelReloadDelay);
@@ -58,6 +70,8 @@ public class CollisionDetectorGG : MonoBehaviour
     }
     void EffectsAfterFinish()
     {
+        isControllable = false;
+        AudioSource.Stop();
         AudioSource.PlayOneShot(VictoryAudio);
         GetComponent<MovementGG>().enabled = false;
         Invoke("LoadNextLevelScene", LoadNextLevelDelay);
