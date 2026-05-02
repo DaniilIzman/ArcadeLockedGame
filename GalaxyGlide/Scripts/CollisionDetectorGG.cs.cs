@@ -4,6 +4,9 @@ using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 public class CollisionDetectorGG : MonoBehaviour
 {
+    [SerializeField] float LevelReloadDelay = 0f;
+    [SerializeField] float LoadNextLevelDelay = 0f;
+
     void OnCollisionEnter(Collision other)
     {
         switch (other.gameObject.tag)
@@ -15,7 +18,7 @@ public class CollisionDetectorGG : MonoBehaviour
                 Debug.Log("Obstacle");
                 break;
             case "Finish":
-                LoadNextLevelScene();
+                EffectsAfterFinish();
                 break;
             default:
                 EffectsAfterCrash();
@@ -23,16 +26,15 @@ public class CollisionDetectorGG : MonoBehaviour
         }
     }
 
-    void EffectsAfterCrash()
-    {
-        GetComponent<MovementGG>().enabled = false;
-        Invoke("ReloadLevelScene", 3f);
-    }
-
     void ReloadLevelScene()
     {
         int currentScene = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentScene);
+    }
+    void EffectsAfterCrash()
+    {
+        GetComponent<MovementGG>().enabled = false;
+        Invoke("ReloadLevelScene", LevelReloadDelay);
     }
 
     void LoadNextLevelScene()
@@ -44,5 +46,10 @@ public class CollisionDetectorGG : MonoBehaviour
             nextScene = 0;
         }
         SceneManager.LoadScene(nextScene);
+    }
+    void EffectsAfterFinish()
+    {
+        GetComponent<MovementGG>().enabled = false;
+        Invoke("LoadNextLevelScene", LoadNextLevelDelay);
     }
 }
