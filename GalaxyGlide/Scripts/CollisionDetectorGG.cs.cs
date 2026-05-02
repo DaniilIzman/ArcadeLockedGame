@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class CollisionDetectorGG : MonoBehaviour
 {
     void OnCollisionEnter(Collision other)
@@ -16,7 +16,7 @@ public class CollisionDetectorGG : MonoBehaviour
                 Debug.Log("Finish");
                 break;
             default:
-                Debug.Log("Bumped into unidentified object!");
+                SceneManager.LoadScene(0);
                 break;
         }
     }
