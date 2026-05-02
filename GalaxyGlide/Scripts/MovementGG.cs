@@ -7,6 +7,7 @@ public class MovementGG : MonoBehaviour
     [SerializeField] InputAction Rotation;
     [SerializeField] float thrustForce = 0f;
     [SerializeField] float rotationForce = 0f;
+    [SerializeField] AudioClip thrustAudio;
     Rigidbody myRigidBody;
     AudioSource AudioSource;
     void Start()
@@ -33,7 +34,7 @@ public class MovementGG : MonoBehaviour
             myRigidBody.AddRelativeForce(Vector3.up * thrustForce * Time.fixedDeltaTime);
             if(!AudioSource.isPlaying)
             {
-                AudioSource.Play();
+                AudioSource.PlayOneShot(thrustAudio);
             }
 
         }
