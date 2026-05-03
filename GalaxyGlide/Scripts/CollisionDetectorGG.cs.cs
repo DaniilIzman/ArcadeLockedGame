@@ -8,6 +8,8 @@ public class CollisionDetectorGG : MonoBehaviour
     [SerializeField] float LoadNextLevelDelay = 0f;
     [SerializeField] AudioClip VictoryAudio;
     [SerializeField] AudioClip CrashAudio;
+    [SerializeField] ParticleSystem CrashParticleSystem;
+    [SerializeField] ParticleSystem VictoryParticleSystem;
     AudioSource AudioSource;
     bool isControllable = true;
 
@@ -34,9 +36,11 @@ public class CollisionDetectorGG : MonoBehaviour
                     Debug.Log("Obstacle");
                     break;
                 case "Finish":
+                    VictoryParticleSystem.Play();
                     EffectsAfterFinish();
                     break;
                 default:
+                    CrashParticleSystem.Play();
                     EffectsAfterCrash();
                     break;
             } 
