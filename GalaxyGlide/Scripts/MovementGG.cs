@@ -59,6 +59,7 @@ public class MovementGG : MonoBehaviour
             ApplyRotation(rotationForce);
             if(!RightThrustParticleSystem.isPlaying)
             {
+                LeftThrustParticleSystem.Stop();
                 RightThrustParticleSystem.Play();
             }
         }
@@ -67,6 +68,7 @@ public class MovementGG : MonoBehaviour
             ApplyRotation(-rotationForce);
             if(!LeftThrustParticleSystem.isPlaying)
             {
+                RightThrustParticleSystem.Stop();
                 LeftThrustParticleSystem.Play();
             }
         }
