@@ -13,6 +13,7 @@ public class CollisionDetectorGG : MonoBehaviour
     [SerializeField] ParticleSystem VictoryParticleSystem;
     AudioSource AudioSource;
     bool isControllable = true;
+    bool isCollidable = true;
 
     void Start()
     {
@@ -25,7 +26,7 @@ public class CollisionDetectorGG : MonoBehaviour
     }
     void OnCollisionEnter(Collision other)
     {
-        if(isControllable == false)
+        if(isControllable == false || !isCollidable)
         {
             return;
         }
@@ -36,9 +37,6 @@ public class CollisionDetectorGG : MonoBehaviour
             {
                 case "Spawn":
                     Debug.Log("Spawnpoint");
-                    break;
-                case "Obstacle":
-                    Debug.Log("Obstacle");
                     break;
                 case "Finish":
                     EffectsAfterFinish();
@@ -91,6 +89,10 @@ public class CollisionDetectorGG : MonoBehaviour
         if(Keyboard.current.lKey.isPressed)
         {
             LoadNextLevelScene();
+        }
+        else if(Keyboard.current.cKey.wasPressedThisFrame)
+        {
+            isCollidable = !isCollidable;
         }
     }
 }
