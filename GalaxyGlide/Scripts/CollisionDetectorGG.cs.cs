@@ -36,11 +36,9 @@ public class CollisionDetectorGG : MonoBehaviour
                     Debug.Log("Obstacle");
                     break;
                 case "Finish":
-                    VictoryParticleSystem.Play();
                     EffectsAfterFinish();
                     break;
                 default:
-                    CrashParticleSystem.Play();
                     EffectsAfterCrash();
                     break;
             } 
@@ -55,6 +53,7 @@ public class CollisionDetectorGG : MonoBehaviour
     }
     void EffectsAfterCrash()
     {
+        CrashParticleSystem.Play();
         isControllable = false;
         AudioSource.Stop();
         AudioSource.PlayOneShot(CrashAudio);
@@ -74,6 +73,7 @@ public class CollisionDetectorGG : MonoBehaviour
     }
     void EffectsAfterFinish()
     {
+        VictoryParticleSystem.Play();
         isControllable = false;
         AudioSource.Stop();
         AudioSource.PlayOneShot(VictoryAudio);
