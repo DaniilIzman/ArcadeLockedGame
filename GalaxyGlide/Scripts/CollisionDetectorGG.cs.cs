@@ -53,10 +53,10 @@ public class CollisionDetectorGG : MonoBehaviour
     }
     void EffectsAfterCrash()
     {
-        CrashParticleSystem.Play();
         isControllable = false;
         AudioSource.Stop();
         AudioSource.PlayOneShot(CrashAudio);
+        CrashParticleSystem.Play();
         GetComponent<MovementGG>().enabled = false;
         Invoke("ReloadLevelScene", LevelReloadDelay);
     }
@@ -73,10 +73,10 @@ public class CollisionDetectorGG : MonoBehaviour
     }
     void EffectsAfterFinish()
     {
-        VictoryParticleSystem.Play();
         isControllable = false;
         AudioSource.Stop();
         AudioSource.PlayOneShot(VictoryAudio);
+        VictoryParticleSystem.Play();
         GetComponent<MovementGG>().enabled = false;
         Invoke("LoadNextLevelScene", LoadNextLevelDelay);
     }
