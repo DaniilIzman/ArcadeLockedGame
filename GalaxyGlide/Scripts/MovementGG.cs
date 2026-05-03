@@ -34,51 +34,76 @@ public class MovementGG : MonoBehaviour
     {
         if (Up.IsPressed())
         {
-            myRigidBody.AddRelativeForce(Vector3.up * thrustForce * Time.fixedDeltaTime);
-            if(!AudioSource.isPlaying)
-            {
-                AudioSource.PlayOneShot(thrustAudio);
-            }
-            if(!MainThrustParticleSystem.isPlaying)
-            {
-                MainThrustParticleSystem.Play();
-            }
+            BeginThrusting();
         }
         else
         {
-            AudioSource.Stop();
-            MainThrustParticleSystem.Stop();
+            StopThrusting();
         }
     }
 
+    private void BeginThrusting()
+    {
+        myRigidBody.AddRelativeForce(Vector3.up * thrustForce * Time.fixedDeltaTime);
+        if (!AudioSource.isPlaying)
+        {
+            AudioSource.PlayOneShot(thrustAudio);
+        }
+        if (!MainThrustParticleSystem.isPlaying)
+        {
+            MainThrustParticleSystem.Play();
+        }
+    }
+
+    private void StopThrusting()
+    {
+        AudioSource.Stop();
+        MainThrustParticleSystem.Stop();
+    }
+    
     private void RotationController()
     {
         float RotationInput = Rotation.ReadValue<float>();
         if(RotationInput < 0)
         {
-            ApplyRotation(rotationForce);
-            if(!RightThrustParticleSystem.isPlaying)
-            {
-                LeftThrustParticleSystem.Stop();
-                RightThrustParticleSystem.Play();
-            }
+            RightRotation();
         }
         else if(RotationInput > 0)
         {
-            ApplyRotation(-rotationForce);
-            if(!LeftThrustParticleSystem.isPlaying)
-            {
-                RightThrustParticleSystem.Stop();
-                LeftThrustParticleSystem.Play();
-            }
+            LeftRotation();
         }
         else
         {
-            LeftThrustParticleSystem.Stop();
-            RightThrustParticleSystem.Stop();
+            StopRotation();
         }
     }
 
+    private void RightRotation()
+    {
+        ApplyRotation(rotationForce);
+        if (!RightThrustParticleSystem.isPlaying)
+        {
+            LeftThrustParticleSystem.Stop();
+            RightThrustParticleSystem.Play();
+        }
+    }
+
+    private void LeftRotation()
+    {
+        ApplyRotation(-rotationForce);
+        if (!LeftThrustParticleSystem.isPlaying)
+        {
+            RightThrustParticleSystem.Stop();
+            LeftThrustParticleSystem.Play();
+        }
+    }
+
+    private void StopRotation()
+    {
+        LeftThrustParticleSystem.Stop();
+        RightThrustParticleSystem.Stop();
+    }
+    
     private void ApplyRotation(float rotationPerFrame)
     {
         myRigidBody.freezeRotation = true;
