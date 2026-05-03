@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 public class CollisionDetectorGG : MonoBehaviour
@@ -18,6 +19,10 @@ public class CollisionDetectorGG : MonoBehaviour
         AudioSource = GetComponent<AudioSource>();
     }
 
+    void Update()
+    {
+        Debugging();
+    }
     void OnCollisionEnter(Collision other)
     {
         if(isControllable == false)
@@ -79,5 +84,13 @@ public class CollisionDetectorGG : MonoBehaviour
         VictoryParticleSystem.Play();
         GetComponent<MovementGG>().enabled = false;
         Invoke("LoadNextLevelScene", LoadNextLevelDelay);
+    }
+
+    void Debugging()
+    {
+        if(Keyboard.current.lKey.isPressed)
+        {
+            LoadNextLevelScene();
+        }
     }
 }
