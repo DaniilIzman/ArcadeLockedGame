@@ -39,16 +39,15 @@ public class MovementGG : MonoBehaviour
             {
                 AudioSource.PlayOneShot(thrustAudio);
             }
-            MainThrustParticleSystem.Play();
-            LeftThrustParticleSystem.Play();
-            RightThrustParticleSystem.Play();
+            if(!MainThrustParticleSystem.isPlaying)
+            {
+                MainThrustParticleSystem.Play();
+            }
         }
         else
         {
             AudioSource.Stop();
             MainThrustParticleSystem.Stop();
-            LeftThrustParticleSystem.Stop();
-            RightThrustParticleSystem.Stop();
         }
     }
 
@@ -58,10 +57,23 @@ public class MovementGG : MonoBehaviour
         if(RotationInput < 0)
         {
             ApplyRotation(rotationForce);
+            if(!RightThrustParticleSystem.isPlaying)
+            {
+                RightThrustParticleSystem.Play();
+            }
         }
         else if(RotationInput > 0)
         {
             ApplyRotation(-rotationForce);
+            if(!LeftThrustParticleSystem.isPlaying)
+            {
+                LeftThrustParticleSystem.Play();
+            }
+        }
+        else
+        {
+            LeftThrustParticleSystem.Stop();
+            RightThrustParticleSystem.Stop();
         }
     }
 
