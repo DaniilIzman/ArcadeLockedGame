@@ -8,6 +8,9 @@ public class MovementGG : MonoBehaviour
     [SerializeField] float thrustForce = 0f;
     [SerializeField] float rotationForce = 0f;
     [SerializeField] AudioClip thrustAudio;
+    [SerializeField] ParticleSystem MainThrustParticleSystem;
+    [SerializeField] ParticleSystem LeftThrustParticleSystem;
+    [SerializeField] ParticleSystem RightThrustParticleSystem;
     Rigidbody myRigidBody;
     AudioSource AudioSource;
     void Start()
@@ -36,11 +39,16 @@ public class MovementGG : MonoBehaviour
             {
                 AudioSource.PlayOneShot(thrustAudio);
             }
-
+            MainThrustParticleSystem.Play();
+            LeftThrustParticleSystem.Play();
+            RightThrustParticleSystem.Play();
         }
         else
         {
             AudioSource.Stop();
+            MainThrustParticleSystem.Stop();
+            LeftThrustParticleSystem.Stop();
+            RightThrustParticleSystem.Stop();
         }
     }
 
