@@ -3,15 +3,22 @@ using UnityEngine.InputSystem;
 public class PlayerMovementCF : MonoBehaviour
 {
     [SerializeField] float controlSpeed = 0f;
-
+    Vector2 movement;   
+    
     void Update()
     {
-        float xOffset = controlSpeed * Time.deltaTime;
-        transform.localPosition = new Vector3(transform.localPosition.x + xOffset, 0f, 0f);
+        Translation();
     }
 
     public void OnMove(InputValue value)
     {
-        Debug.Log(value.Get<Vector2>());
+        movement = value.Get<Vector2>();
+    }
+    
+    private void Translation()
+    {
+        float xOffset = movement.x * controlSpeed * Time.deltaTime;
+        float yOffset = movement.y * controlSpeed * Time.deltaTime;
+        transform.localPosition = new Vector3(transform.localPosition.x + xOffset, transform.localPosition.x + yOffset, 0f);
     }
 }
