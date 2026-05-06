@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 public class PlayerMovementCF : MonoBehaviour
 {
     [SerializeField] float controlSpeed = 0f;
+    [SerializeField] float xRestrictionRange = 0f;
     Vector2 movement;   
     
     void Update()
@@ -14,11 +15,13 @@ public class PlayerMovementCF : MonoBehaviour
     {
         movement = value.Get<Vector2>();
     }
-    
+
     private void Translation()
     {
         float xOffset = movement.x * controlSpeed * Time.deltaTime;
+        float pureXpos = transform.localPosition.x + xOffset;
+        float clampXpos = Mathf.Clamp(pureXpos, -xRestrictionRange, xRestrictionRange);
         float yOffset = movement.y * controlSpeed * Time.deltaTime;
-        transform.localPosition = new Vector3(transform.localPosition.x + xOffset, transform.localPosition.x + yOffset, 0f);
+        transform.localPosition = new Vector3(clampXpos, transform.localPosition.y + yOffset, 0f);
     }
 }
