@@ -2,16 +2,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerMovementCF : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] float controlSpeed = 0f;
 
-    // Update is called once per frame
     void Update()
     {
-        
+        float xOffset = controlSpeed * Time.deltaTime;
+        transform.localPosition = new Vector3(transform.localPosition.x + xOffset, 0f, 0f);
     }
 
     public void OnMove(InputValue value)
