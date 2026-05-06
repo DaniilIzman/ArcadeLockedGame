@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 public class PlayerMovementCF : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -12,5 +12,10 @@ public class PlayerMovementCF : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void OnMove(InputValue value)
+    {
+        Debug.Log(value.Get<Vector2>());
     }
 }
