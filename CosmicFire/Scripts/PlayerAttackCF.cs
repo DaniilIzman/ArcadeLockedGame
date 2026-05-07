@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerAttackCF : MonoBehaviour
 {
-    [SerializeField] GameObject firingParticle;
+    [SerializeField] GameObject[] firingParticles;
     bool isFiring = false;
 
     void Update()
@@ -17,7 +17,10 @@ public class PlayerAttackCF : MonoBehaviour
 
     void ProcessFiring()
     {
-        ParticleSystem.EmissionModule emmision = firingParticle.GetComponent<ParticleSystem>().emission;
-        emmision.enabled = isFiring;
+        foreach (GameObject firingParticle in firingParticles)
+        {
+            ParticleSystem.EmissionModule emmision = firingParticle.GetComponent<ParticleSystem>().emission;
+            emmision.enabled = isFiring;
+        }
     }
 }
