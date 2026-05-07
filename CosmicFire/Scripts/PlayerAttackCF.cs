@@ -3,9 +3,22 @@ using UnityEngine.InputSystem;
 
 public class PlayerAttackCF : MonoBehaviour
 {
+    bool isFiring = false;
 
+    void Update()
+    {
+        ProcessFiring();
+    }
     public void OnAttack(InputValue value)
     {
-        Debug.Log("Fire");
+        isFiring = value.isPressed;
+    }
+
+    void ProcessFiring()
+    {
+        if(isFiring)
+        {
+            Debug.Log("Fire");
+        }
     }
 }
