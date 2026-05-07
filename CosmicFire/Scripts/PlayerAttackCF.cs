@@ -3,10 +3,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerAttackCF : MonoBehaviour
 {
-    [SerializeField] float targetDistance = 0f;
     [SerializeField] GameObject[] firingParticles;
     [SerializeField] RectTransform crosshair;
     [SerializeField] Transform targetPoint;
+    [SerializeField] float targetDistance = 0f;
 
     bool isFiring = false;
 
@@ -20,6 +20,7 @@ public class PlayerAttackCF : MonoBehaviour
         MoveTargetPoint();
         MoveCrosshair();
         ProcessFiring();
+        AimLasers();
     }
     public void OnAttack(InputValue value)
     {
@@ -44,5 +45,15 @@ public class PlayerAttackCF : MonoBehaviour
     {
         Vector3 targetPointPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, targetDistance);
         targetPoint.position = Camera.main.ScreenToWorldPoint(targetPointPosition);
+    }
+
+    void AimLasers()
+    {
+        foreach(GameObject firingParticle in firingParticles)
+        {
+            Vector3 fireDirection =  targetPoint.position - transform.position;
+            Quaternion rotationToTarget = Quaternion.LookRotation(fireDirection);
+            firingParticle.transform.rotation = rotationToTarget;
+        }
     }
 }
