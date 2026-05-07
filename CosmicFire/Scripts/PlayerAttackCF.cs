@@ -4,10 +4,12 @@ using UnityEngine.InputSystem;
 public class PlayerAttackCF : MonoBehaviour
 {
     [SerializeField] GameObject[] firingParticles;
+    [SerializeField] RectTransform crosshair;
     bool isFiring = false;
 
     void Update()
     {
+        MoveCrosshair();
         ProcessFiring();
     }
     public void OnAttack(InputValue value)
@@ -22,5 +24,10 @@ public class PlayerAttackCF : MonoBehaviour
             ParticleSystem.EmissionModule emmision = firingParticle.GetComponent<ParticleSystem>().emission;
             emmision.enabled = isFiring;
         }
+    }
+
+    void MoveCrosshair()
+    {
+        crosshair.position = Input.mousePosition;
     }
 }
