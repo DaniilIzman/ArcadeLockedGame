@@ -2,15 +2,8 @@ using UnityEngine;
 
 public class EnemyCF : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void OnParticleCollision(GameObject other)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Destroy(gameObject);
     }
 }
