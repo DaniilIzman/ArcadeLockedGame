@@ -1,16 +1,16 @@
+using System;
+using TMPro;
 using UnityEngine;
 
 public class DialogueCF : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] String[] timelineNextLine;
+    [SerializeField] TMP_Text dialogueText;
+    int currentLine = 0;
 
-    // Update is called once per frame
-    void Update()
+    public void nextDialogueLine()
     {
-        
+        currentLine ++;
+        dialogueText.text = timelineNextLine[currentLine];
     }
 }
