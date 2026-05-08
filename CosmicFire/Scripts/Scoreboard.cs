@@ -1,12 +1,13 @@
 using UnityEngine;
+using TMPro;
 
 public class Scoreboard : MonoBehaviour
 {
     int score = 0;
-
+    [SerializeField] TMP_Text scoreDisplay;
     public void modifyScore(int amount)
     {
         score += amount;
-        Debug.Log(score);
+        scoreDisplay.text = score.ToString();
     }
 }
