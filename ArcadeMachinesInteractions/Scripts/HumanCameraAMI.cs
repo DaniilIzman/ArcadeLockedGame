@@ -2,15 +2,26 @@ using UnityEngine;
 
 public class HumanCameraAMI : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public float sensitivityX;
+    public float sensitivityY;
+
+    public Transform direction;
+
+    float rotationX;
+    float rotationY;
+
     void Start()
     {
-        
+        Cursor.lockState  = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        float mouseX = Input.GetAxis("Mouse X") * Time.deltaTime * sensitivityX;
+        float mouseY = Input.GetAxis("Mouse Y") * Time.deltaTime * sensitivityY;
+
+        rotationY += mouseX;
+        rotationX -= mouseY;
     }
 }
