@@ -5,16 +5,24 @@ public class HumanMovementAMI : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float jumpForce = 5f;
-    public float crouchHeightOffset = 0.5f;
 
     Vector3 movement;
     Rigidbody rb;
+    CapsuleCollider capsule;
     public bool isCrouching = false;
+    
+    float initialHeight;
+    float crouchHeight;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;  
+        rb.freezeRotation = true;
+        
+        capsule = GetComponent<CapsuleCollider>();
+        initialHeight = capsule.height;
+        crouchHeight = initialHeight / 2f;
+        
     }
 
     public void OnMovement(InputValue value)
@@ -27,21 +35,20 @@ public class HumanMovementAMI : MonoBehaviour
         if (value.Get<float>() > 0.5f)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            Debug.Log("Jump triggered!");
         }
     }
 
     public void OnCrouch(InputValue value)
     {
-        if (value.Get<float>() > 0.5f)
+        isCrouching = value.Get<float>() > 0.5f;
+        
+        if (isCrouching)
         {
-            isCrouching = true;   
-            Debug.Log("Crouching: " + isCrouching);    
+            capsule.height = crouchHeight;
         }
-
         else
         {
-            isCrouching = false;   
+            capsule.height = initialHeight;
         }
     }
 

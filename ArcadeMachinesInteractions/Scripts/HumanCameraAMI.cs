@@ -34,7 +34,7 @@ public class HumanCameraAMI : MonoBehaviour
         Vector3 newPosition = originalLocalPosition;
         if (movement.isCrouching)
         {
-            newPosition.y -= movement.crouchHeightOffset;
+            newPosition.y -= 0.5f;
         }
         transform.localPosition = newPosition;
     }
