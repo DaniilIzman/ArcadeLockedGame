@@ -5,9 +5,11 @@ public class HumanMovementAMI : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float jumpForce = 5f;
+    public float crouchHeightOffset = 0.5f;
 
     Vector3 movement;
     Rigidbody rb;
+    public bool isCrouching = false;
 
     void Start()
     {
@@ -26,6 +28,20 @@ public class HumanMovementAMI : MonoBehaviour
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             Debug.Log("Jump triggered!");
+        }
+    }
+
+    public void OnCrouch(InputValue value)
+    {
+        if (value.Get<float>() > 0.5f)
+        {
+            isCrouching = true;   
+            Debug.Log("Crouching: " + isCrouching);    
+        }
+
+        else
+        {
+            isCrouching = false;   
         }
     }
 
