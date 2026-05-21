@@ -71,23 +71,22 @@ public class HumanMovementAMI : MonoBehaviour
         
         Vector3 velocity = move * currentSpeed;
         
-        if (isGrounded)
-        {
-            rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
-        }
-        else
-        {
-            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
-        }
+        rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnCollisionStay(Collision collision)
     {
-        isGrounded = true;
+        if (!collision.collider.isTrigger)
+        {
+            isGrounded = true;
+        }
     }
 
     void OnCollisionExit(Collision collision)
     {
-        isGrounded = false;
+        if (!collision.collider.isTrigger)
+        {
+            isGrounded = false;
+        }
     }
 }
