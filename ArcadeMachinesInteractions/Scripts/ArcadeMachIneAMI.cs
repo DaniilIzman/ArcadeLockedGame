@@ -3,10 +3,13 @@ using UnityEngine.SceneManagement;
 
 public class ArcadeMachineAMI : MonoBehaviour
 {
+    [Header("Scene Settings")]
     [SerializeField] string gameScene = "GameScene";
     [SerializeField] float loadDelay = 2f;
-    
-    bool playerNear = false;
+
+    [Header("Player Detection")]
+    [SerializeField] bool playerNear = false;
+
     bool activated = false;
 
     void OnTriggerEnter(Collider other)
@@ -14,6 +17,7 @@ public class ArcadeMachineAMI : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerNear = true;
+
             Debug.Log("Press E to play");
         }
     }
@@ -30,10 +34,17 @@ public class ArcadeMachineAMI : MonoBehaviour
     {
         if (playerNear && Input.GetKeyDown(KeyCode.E) && !activated)
         {
-            activated = true;
-            Debug.Log("Loading game...");
-            Invoke("LoadGame", loadDelay);
+            StartArcadeMachine();
         }
+    }
+
+    void StartArcadeMachine()
+    {
+        activated = true;
+
+        Debug.Log("Loading game...");
+
+        Invoke(nameof(LoadGame), loadDelay);
     }
 
     void LoadGame()
