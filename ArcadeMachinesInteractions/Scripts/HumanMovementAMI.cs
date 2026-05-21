@@ -71,7 +71,14 @@ public class HumanMovementAMI : MonoBehaviour
         
         Vector3 velocity = move * currentSpeed;
         
-        rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
+        if (isGrounded)
+        {
+            rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
+        }
+        else
+        {
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
+        }
     }
 
     void OnCollisionStay(Collision collision)
