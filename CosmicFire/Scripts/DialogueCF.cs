@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class DialogueCF : MonoBehaviour
 {
-    [SerializeField] String[] timelineNextLine;
+    [Header("Dialogue")]
+    [SerializeField] string[] timelineNextLine;
+
+    [Header("UI")]
     [SerializeField] TMP_Text dialogueText;
+
     int currentLine = 0;
 
-    public void nextDialogueLine()
+    public void NextDialogueLine()
     {
-        currentLine ++;
         dialogueText.text = timelineNextLine[currentLine];
+        currentLine++;
     }
 }
