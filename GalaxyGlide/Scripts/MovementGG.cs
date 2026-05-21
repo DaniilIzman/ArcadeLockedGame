@@ -3,25 +3,41 @@ using UnityEngine.InputSystem;
 
 public class MovementGG : MonoBehaviour
 {
-    [SerializeField] InputAction Up;
-    [SerializeField] InputAction Rotation;
+    [Header("Input")]
+    [SerializeField] InputAction up;
+    [SerializeField] InputAction rotation;
+
+    [Header("Movement Settings")]
     [SerializeField] float thrustForce = 0f;
     [SerializeField] float rotationForce = 0f;
+
+    [Header("Audio")]
     [SerializeField] AudioClip thrustAudio;
-    [SerializeField] ParticleSystem MainThrustParticleSystem;
-    [SerializeField] ParticleSystem LeftThrustParticleSystem;
-    [SerializeField] ParticleSystem RightThrustParticleSystem;
+
+    [Header("Particles")]
+    [SerializeField] ParticleSystem mainThrustParticleSystem;
+    [SerializeField] ParticleSystem leftThrustParticleSystem;
+    [SerializeField] ParticleSystem rightThrustParticleSystem;
+
     Rigidbody myRigidBody;
-    AudioSource AudioSource;
+    AudioSource audioSource;
+
     void Start()
     {
         myRigidBody = GetComponent<Rigidbody>();
-        AudioSource = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
     }
+
     void OnEnable()
     {
-        Up.Enable();
-        Rotation.Enable();
+        up.Enable();
+        rotation.Enable();
+    }
+
+    void OnDisable()
+    {
+        up.Disable();
+        rotation.Disable();
     }
 
     void FixedUpdate()
@@ -30,9 +46,9 @@ public class MovementGG : MonoBehaviour
         RotationController();
     }
 
-    private void ThrustController()
+    void ThrustController()
     {
-        if (Up.IsPressed())
+        if (up.IsPressed())
         {
             BeginThrusting();
         }
@@ -42,33 +58,37 @@ public class MovementGG : MonoBehaviour
         }
     }
 
-    private void BeginThrusting()
+    void BeginThrusting()
     {
         myRigidBody.AddRelativeForce(Vector3.up * thrustForce * Time.fixedDeltaTime);
-        if (!AudioSource.isPlaying)
+
+        if (!audioSource.isPlaying)
         {
-            AudioSource.PlayOneShot(thrustAudio);
+            audioSource.PlayOneShot(thrustAudio);
         }
-        if (!MainThrustParticleSystem.isPlaying)
+
+        if (!mainThrustParticleSystem.isPlaying)
         {
-            MainThrustParticleSystem.Play();
+            mainThrustParticleSystem.Play();
         }
     }
 
-    private void StopThrusting()
+    void StopThrusting()
     {
-        AudioSource.Stop();
-        MainThrustParticleSystem.Stop();
+        audioSource.Stop();
+
+        mainThrustParticleSystem.Stop();
     }
-    
-    private void RotationController()
+
+    void RotationController()
     {
-        float RotationInput = Rotation.ReadValue<float>();
-        if(RotationInput < 0)
+        float rotationInput = rotation.ReadValue<float>();
+
+        if (rotationInput < 0)
         {
             RightRotation();
         }
-        else if(RotationInput > 0)
+        else if (rotationInput > 0)
         {
             LeftRotation();
         }
@@ -78,36 +98,43 @@ public class MovementGG : MonoBehaviour
         }
     }
 
-    private void RightRotation()
+    void RightRotation()
     {
         ApplyRotation(rotationForce);
-        if (!RightThrustParticleSystem.isPlaying)
+
+        if (!rightThrustParticleSystem.isPlaying)
         {
-            LeftThrustParticleSystem.Stop();
-            RightThrustParticleSystem.Play();
+            leftThrustParticleSystem.Stop();
+
+            rightThrustParticleSystem.Play();
         }
     }
 
-    private void LeftRotation()
+    void LeftRotation()
     {
         ApplyRotation(-rotationForce);
-        if (!LeftThrustParticleSystem.isPlaying)
+
+        if (!leftThrustParticleSystem.isPlaying)
         {
-            RightThrustParticleSystem.Stop();
-            LeftThrustParticleSystem.Play();
+            rightThrustParticleSystem.Stop();
+
+            leftThrustParticleSystem.Play();
         }
     }
 
-    private void StopRotation()
+    void StopRotation()
     {
-        LeftThrustParticleSystem.Stop();
-        RightThrustParticleSystem.Stop();
+        leftThrustParticleSystem.Stop();
+
+        rightThrustParticleSystem.Stop();
     }
-    
-    private void ApplyRotation(float rotationPerFrame)
+
+    void ApplyRotation(float rotationPerFrame)
     {
         myRigidBody.freezeRotation = true;
+
         transform.Rotate(Vector3.forward * rotationPerFrame * Time.fixedDeltaTime);
+
         myRigidBody.freezeRotation = false;
     }
 }
