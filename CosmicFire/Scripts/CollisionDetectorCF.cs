@@ -2,18 +2,33 @@ using UnityEngine;
 
 public class CollisionDetectorCF : MonoBehaviour
 {
+    [Header("Effects")]
     [SerializeField] GameObject destroyVFX;
-    GameSceneManagerCF gameSceneManagerCF;
+
+    GameSceneManagerCF gameSceneManager;
 
     void Start()
     {
-        gameSceneManagerCF = FindFirstObjectByType<GameSceneManagerCF>();
+        gameSceneManager = FindFirstObjectByType<GameSceneManagerCF>();
     }
 
     void OnTriggerEnter(Collider other)
     {
-        gameSceneManagerCF.ReloadLevel();
-        Instantiate(destroyVFX, transform.position, Quaternion.identity);
+        HandleHit();
+    }
+
+    void HandleHit()
+    {
+        if (gameSceneManager != null)
+        {
+            gameSceneManager.ReloadLevel();
+        }
+
+        if (destroyVFX != null)
+        {
+            Instantiate(destroyVFX, transform.position, Quaternion.identity);
+        }
+
         Destroy(gameObject);
     }
 }
