@@ -3,25 +3,32 @@ using UnityEngine.InputSystem;
 
 public class HumanMovementAMI : MonoBehaviour
 {
+    [Header("Movement Settings")]
     public float moveSpeed = 5f;
     public float jumpForce = 5f;
     public float crouchSpeedMultiplier = 0.5f;
 
-    Vector3 movement;
+    [Header("Movement State")]
+    public bool isCrouching = false;
+
+    [Header("Ground Check")]
+    public bool isGrounded = false;
+
     Rigidbody rb;
     CapsuleCollider capsule;
-    public bool isCrouching = false;
-    bool isGrounded = false;
-    
+
+    Vector3 movement;
+
     float initialHeight;
     float crouchHeight;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
-        
         capsule = GetComponent<CapsuleCollider>();
+
+        rb.freezeRotation = true;
+
         initialHeight = capsule.height;
         crouchHeight = initialHeight / 2f;
     }
@@ -36,7 +43,9 @@ public class HumanMovementAMI : MonoBehaviour
         if (value.Get<float>() > 0.5f && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
             isGrounded = false;
+
             Debug.Log("Jumped!");
         }
     }
@@ -44,7 +53,7 @@ public class HumanMovementAMI : MonoBehaviour
     public void OnCrouch(InputValue value)
     {
         isCrouching = value.Get<float>() > 0.5f;
-        
+
         if (isCrouching)
         {
             capsule.height = crouchHeight;
@@ -58,8 +67,9 @@ public class HumanMovementAMI : MonoBehaviour
     void FixedUpdate()
     {
         Vector3 move = transform.right * movement.x + transform.forward * movement.z;
-        
+
         float currentSpeed;
+
         if (isCrouching)
         {
             currentSpeed = moveSpeed * crouchSpeedMultiplier;
@@ -68,9 +78,9 @@ public class HumanMovementAMI : MonoBehaviour
         {
             currentSpeed = moveSpeed;
         }
-        
+
         Vector3 velocity = move * currentSpeed;
-        
+
         if (isGrounded)
         {
             rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
