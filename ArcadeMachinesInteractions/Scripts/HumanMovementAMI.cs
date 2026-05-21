@@ -5,6 +5,7 @@ public class HumanMovementAMI : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float jumpForce = 5f;
+    public float crouchSpeedMultiplier = 0.5f;
 
     Vector3 movement;
     Rigidbody rb;
@@ -22,7 +23,6 @@ public class HumanMovementAMI : MonoBehaviour
         capsule = GetComponent<CapsuleCollider>();
         initialHeight = capsule.height;
         crouchHeight = initialHeight / 2f;
-        
     }
 
     public void OnMovement(InputValue value)
@@ -55,7 +55,18 @@ public class HumanMovementAMI : MonoBehaviour
     void FixedUpdate()
     {
         Vector3 move = transform.right * movement.x + transform.forward * movement.z;
-        Vector3 velocity = move * moveSpeed;
+        
+        float currentSpeed;
+        if (isCrouching)
+        {
+            currentSpeed = moveSpeed * crouchSpeedMultiplier;
+        }
+        else
+        {
+            currentSpeed = moveSpeed;
+        }
+        
+        Vector3 velocity = move * currentSpeed;
         
         rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
     }
