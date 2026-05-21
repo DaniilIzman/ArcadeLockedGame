@@ -2,10 +2,15 @@ using UnityEngine;
 
 public class EnemyCF : MonoBehaviour
 {
-    [SerializeField] GameObject destroyVFX;
+    [Header("Stats")]
     [SerializeField] int hitPoints = 1;
     [SerializeField] int scoreValue = 10;
+
+    [Header("VFX")]
+    [SerializeField] GameObject destroyVFX;
+
     Scoreboard scoreboard;
+
     void Start()
     {
         scoreboard = FindFirstObjectByType<Scoreboard>();
@@ -13,17 +18,25 @@ public class EnemyCF : MonoBehaviour
 
     void OnParticleCollision(GameObject other)
     {
-        EnemyHP();
+        TakeDamage();
     }
 
-    private void EnemyHP()
+    void TakeDamage()
     {
-        hitPoints = hitPoints - 1;
+        hitPoints--;
+
         if (hitPoints <= 0)
         {
-            scoreboard.modifyScore(scoreValue);
-            Instantiate(destroyVFX, transform.position, Quaternion.identity);
-            Destroy(gameObject);
+            Die();
         }
+    }
+
+    void Die()
+    {
+        scoreboard.modifyScore(scoreValue);
+
+        Instantiate(destroyVFX, transform.position, Quaternion.identity);
+
+        Destroy(gameObject);
     }
 }
