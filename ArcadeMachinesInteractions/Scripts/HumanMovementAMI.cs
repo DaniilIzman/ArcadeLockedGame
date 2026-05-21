@@ -11,6 +11,7 @@ public class HumanMovementAMI : MonoBehaviour
     Rigidbody rb;
     CapsuleCollider capsule;
     public bool isCrouching = false;
+    bool isGrounded = false;
     
     float initialHeight;
     float crouchHeight;
@@ -32,9 +33,11 @@ public class HumanMovementAMI : MonoBehaviour
 
     public void OnJump(InputValue value)
     {
-        if (value.Get<float>() > 0.5f)
+        if (value.Get<float>() > 0.5f && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isGrounded = false;
+            Debug.Log("Jumped!");
         }
     }
 
@@ -69,5 +72,17 @@ public class HumanMovementAMI : MonoBehaviour
         Vector3 velocity = move * currentSpeed;
         
         rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        isGrounded = true;
+        Debug.Log("Grounded");
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        isGrounded = false;
+        Debug.Log("In air");
     }
 }
