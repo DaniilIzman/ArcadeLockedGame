@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class ArcadeMachineAMI : MonoBehaviour
 {
@@ -17,7 +16,6 @@ public class ArcadeMachineAMI : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerNear = true;
-
             Debug.Log("Press E to play");
         }
     }
@@ -25,30 +23,19 @@ public class ArcadeMachineAMI : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
-        {
             playerNear = false;
-        }
     }
 
     void Update()
     {
         if (playerNear && Input.GetKeyDown(KeyCode.E) && !activated)
-        {
             StartArcadeMachine();
-        }
     }
 
     void StartArcadeMachine()
     {
         activated = true;
-
         Debug.Log("Loading game...");
-
-        Invoke(nameof(LoadGame), loadDelay);
-    }
-
-    void LoadGame()
-    {
-        SceneManager.LoadScene(gameScene);
+        SceneTransitionManagerAMI.instance.LoadScene(gameScene, loadDelay);
     }
 }
