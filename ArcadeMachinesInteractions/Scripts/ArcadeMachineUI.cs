@@ -1,16 +1,30 @@
 using UnityEngine;
+using TMPro;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class ArcadeMachineUI : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] TextMeshProUGUI interactionText;
+    [SerializeField] string displayText = "Press E to play";
+
     void Start()
     {
-        
+        interactionText.enabled = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnTriggerEnter(Collider other)
     {
-        
+        if (other.CompareTag("Player"))
+        {
+            interactionText.text = displayText;
+            interactionText.enabled = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            interactionText.enabled = false;
+        }
     }
 }
