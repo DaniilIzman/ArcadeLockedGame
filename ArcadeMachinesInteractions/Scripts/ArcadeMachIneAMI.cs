@@ -10,12 +10,18 @@ public class ArcadeMachineAMI : MonoBehaviour
 
     bool playerNear = false;
     bool isLoading = false;
+    Transform playerTransform;
+    HumanMovementAMI playerMovement;
+    Rigidbody playerRigidbody;
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             playerNear = true;
+            playerTransform = other.transform;
+            playerMovement = other.GetComponent<HumanMovementAMI>();
+            playerRigidbody = other.GetComponent<Rigidbody>();
             Debug.Log("Press E to play");
         }
     }
@@ -43,8 +49,17 @@ public class ArcadeMachineAMI : MonoBehaviour
     {
         isLoading = true;
         
+        FreezePlayer();
+        
         yield return new WaitForSeconds(loadDelay);
         
         SceneManager.LoadScene(gameScene);
+    }
+
+    void FreezePlayer()
+    {
+        playerMovement.enabled = false;
+        playerRigidbody.linearVelocity = Vector3.zero;
+        playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
     }
 }
