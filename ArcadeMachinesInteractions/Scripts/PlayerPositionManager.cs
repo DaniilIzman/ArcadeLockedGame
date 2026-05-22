@@ -2,15 +2,39 @@ using UnityEngine;
 
 public class PlayerPositionManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public static PlayerPositionManager instance;
+
+    private Vector3 savedPosition;
+    private bool hasSavedPosition = false;
+
+    void Awake()
     {
-        
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SavePlayerPosition(Vector3 position)
     {
-        
+        savedPosition = position;
+        hasSavedPosition = true;
+        Debug.Log("Position saved: " + position);
+    }
+
+    public bool TryLoadPlayerPosition(out Vector3 position)
+    {
+        position = savedPosition;
+        return hasSavedPosition;
+    }
+
+    public void ClearSavedPosition()
+    {
+        hasSavedPosition = false;
     }
 }
