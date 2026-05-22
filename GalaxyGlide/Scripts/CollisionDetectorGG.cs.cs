@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class CollisionDetectorGG : MonoBehaviour
 {
@@ -21,7 +20,6 @@ public class CollisionDetectorGG : MonoBehaviour
 
     AudioSource audioSource;
     MovementGG movement;
-
     bool isControllable = true;
 
     void Start()
@@ -38,28 +36,20 @@ public class CollisionDetectorGG : MonoBehaviour
     void OnCollisionEnter(Collision other)
     {
         if (!isControllable || !isCollidable)
-        {
             return;
-        }
 
         switch (other.gameObject.tag)
         {
             case "Spawn":
-
                 Debug.Log("Spawnpoint");
-
                 break;
 
             case "Finish":
-
                 EffectsAfterFinish();
-
                 break;
 
             default:
-
                 EffectsAfterCrash();
-
                 break;
         }
     }
@@ -67,65 +57,31 @@ public class CollisionDetectorGG : MonoBehaviour
     void EffectsAfterCrash()
     {
         isControllable = false;
-
         audioSource.Stop();
         audioSource.PlayOneShot(crashAudio);
-
         crashParticleSystem.Play();
-
         movement.enabled = false;
-
-        Invoke(nameof(ReloadLevelScene), levelReloadDelay);
+        SceneTransitionManagerAMI.instance.ReloadCurrentScene(levelReloadDelay);
     }
 
     void EffectsAfterFinish()
     {
         isControllable = false;
-
         audioSource.Stop();
         audioSource.PlayOneShot(victoryAudio);
-
         victoryParticleSystem.Play();
-
         movement.enabled = false;
-
-        Invoke(nameof(LoadNextLevelScene), loadNextLevelDelay);
-    }
-
-    void ReloadLevelScene()
-    {
-        int currentScene =
-            SceneManager.GetActiveScene().buildIndex;
-
-        SceneManager.LoadScene(currentScene);
-    }
-
-    void LoadNextLevelScene()
-    {
-        int currentScene =
-            SceneManager.GetActiveScene().buildIndex;
-
-        int nextScene = currentScene + 1;
-
-        if (nextScene >= SceneManager.sceneCountInBuildSettings)
-        {
-            nextScene = 0;
-        }
-
-        SceneManager.LoadScene(nextScene);
+        SceneTransitionManagerAMI.instance.LoadNextScene(loadNextLevelDelay);
     }
 
     void Debugging()
     {
         if (Keyboard.current.lKey.wasPressedThisFrame)
-        {
-            LoadNextLevelScene();
-        }
+            SceneTransitionManagerAMI.instance.LoadNextScene();
 
         else if (Keyboard.current.cKey.wasPressedThisFrame)
         {
             isCollidable = !isCollidable;
-
             Debug.Log("Collisions: " + isCollidable);
         }
     }
