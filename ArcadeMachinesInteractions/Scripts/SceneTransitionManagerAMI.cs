@@ -4,7 +4,7 @@ using System.Collections;
 
 public class SceneTransitionManagerAMI : MonoBehaviour
 {
-    public static SceneTransitionManager instance;
+    public static SceneTransitionManagerAMI instance;
 
     void Awake()
     {
@@ -21,31 +21,32 @@ public class SceneTransitionManagerAMI : MonoBehaviour
 
     public void LoadScene(string sceneName, float delay = 0f)
     {
-        StartCoroutine(LoadSceneCoroutine(sceneName, delay));
+        StartCoroutine(LoadSceneByNameCoroutine(sceneName, delay));
     }
 
     public void ReloadCurrentScene(float delay = 0f)
     {
-        int currentScene = SceneManager.GetActiveScene().buildIndex;
-        StartCoroutine(LoadSceneCoroutine(currentScene.ToString(), delay));
+        StartCoroutine(LoadSceneByIndexCoroutine(SceneManager.GetActiveScene().buildIndex, delay));
     }
 
     public void LoadNextScene(float delay = 0f)
     {
-        int currentScene = SceneManager.GetActiveScene().buildIndex;
-        int nextScene = currentScene + 1;
+        int next = SceneManager.GetActiveScene().buildIndex + 1;
+        if (next >= SceneManager.sceneCountInBuildSettings)
+            next = 0;
 
-        if (nextScene >= SceneManager.sceneCountInBuildSettings)
-        {
-            nextScene = 0;
-        }
-
-        StartCoroutine(LoadSceneCoroutine(nextScene.ToString(), delay));
+        StartCoroutine(LoadSceneByIndexCoroutine(next, delay));
     }
 
-    IEnumerator LoadSceneCoroutine(string sceneName, float delay)
+    IEnumerator LoadSceneByNameCoroutine(string sceneName, float delay)
     {
         yield return new WaitForSeconds(delay);
         SceneManager.LoadScene(sceneName);
+    }
+
+    IEnumerator LoadSceneByIndexCoroutine(int index, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SceneManager.LoadScene(index);
     }
 }
