@@ -4,21 +4,18 @@ using UnityEngine.InputSystem;
 public class HumanMovementAMI : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float moveSpeed = 5f;
-    public float jumpForce = 5f;
-    public float crouchSpeedMultiplier = 0.5f;
+    [SerializeField] float moveSpeed = 5f;
+    [SerializeField] float jumpForce = 5f;
+    [SerializeField] float crouchSpeedMultiplier = 0.5f;
 
-    [Header("Movement State")]
-    public bool isCrouching = false;
-
-    [Header("Ground Check")]
-    public bool isGrounded = false;
+    [Header("Ground Detection")]
+    [SerializeField] int groundContactCount = 0;
 
     Rigidbody rb;
     CapsuleCollider capsule;
-
     Vector3 movement;
 
+    public bool isCrouching = false;
     float initialHeight;
     float crouchHeight;
 
@@ -26,7 +23,6 @@ public class HumanMovementAMI : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         capsule = GetComponent<CapsuleCollider>();
-
         rb.freezeRotation = true;
 
         initialHeight = capsule.height;
@@ -40,20 +36,16 @@ public class HumanMovementAMI : MonoBehaviour
 
     public void OnJump(InputValue value)
     {
-        if (value.Get<float>() > 0.5f && isGrounded)
+        if (value.Get<float>() > 0.5f && IsGrounded())
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-
-            isGrounded = false;
-
-            Debug.Log("Jumped!");
         }
     }
 
     public void OnCrouch(InputValue value)
     {
         isCrouching = value.Get<float>() > 0.5f;
-
+        
         if (isCrouching)
         {
             capsule.height = crouchHeight;
@@ -66,24 +58,26 @@ public class HumanMovementAMI : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector3 move = transform.right * movement.x + transform.forward * movement.z;
+        ApplyMovement();
+    }
 
-        float currentSpeed;
-
+    void ApplyMovement()
+    {
+        Vector3 moveDirection = transform.right * movement.x + transform.forward * movement.z;
+        
+        float speed;
         if (isCrouching)
         {
-            currentSpeed = moveSpeed * crouchSpeedMultiplier;
+            speed = moveSpeed * crouchSpeedMultiplier;
         }
         else
         {
-            currentSpeed = moveSpeed;
+            speed = moveSpeed;
         }
 
-        Vector3 velocity = move * currentSpeed;
-
-        if (isGrounded)
+        if (IsGrounded())
         {
-            rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
+            rb.linearVelocity = new Vector3(moveDirection.x * speed, rb.linearVelocity.y, moveDirection.z * speed);
         }
         else
         {
@@ -91,11 +85,16 @@ public class HumanMovementAMI : MonoBehaviour
         }
     }
 
-    void OnCollisionStay(Collision collision)
+    bool IsGrounded()
+    {
+        return groundContactCount > 0;
+    }
+
+    void OnCollisionEnter(Collision collision)
     {
         if (!collision.collider.isTrigger)
         {
-            isGrounded = true;
+            groundContactCount++;
         }
     }
 
@@ -103,7 +102,7 @@ public class HumanMovementAMI : MonoBehaviour
     {
         if (!collision.collider.isTrigger)
         {
-            isGrounded = false;
+            groundContactCount--;
         }
     }
 }
