@@ -1,15 +1,15 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
+using System.Collections;
 
 public class ArcadeMachineAMI : MonoBehaviour
 {
-    [Header("Scene Settings")]
     [SerializeField] string gameScene = "GameScene";
     [SerializeField] float loadDelay = 2f;
 
-    [Header("Player Detection")]
-    [SerializeField] bool playerNear = false;
-
-    bool activated = false;
+    bool playerNear = false;
+    bool isLoading = false;
 
     void OnTriggerEnter(Collider other)
     {
@@ -23,19 +23,28 @@ public class ArcadeMachineAMI : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
+        {
             playerNear = false;
+        }
     }
 
     void Update()
     {
-        if (playerNear && Input.GetKeyDown(KeyCode.E) && !activated)
-            StartArcadeMachine();
+        if (playerNear && !isLoading)
+        {
+            if (Keyboard.current.eKey.wasPressedThisFrame)
+            {
+                StartCoroutine(LoadGameScene());
+            }
+        }
     }
 
-    void StartArcadeMachine()
+    IEnumerator LoadGameScene()
     {
-        activated = true;
-        Debug.Log("Loading game...");
-        SceneTransitionManagerAMI.instance.LoadScene(gameScene, loadDelay);
+        isLoading = true;
+        
+        yield return new WaitForSeconds(loadDelay);
+        
+        SceneManager.LoadScene(gameScene);
     }
 }
