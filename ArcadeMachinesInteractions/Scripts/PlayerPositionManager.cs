@@ -4,8 +4,8 @@ public class PlayerPositionManager : MonoBehaviour
 {
     public static PlayerPositionManager instance;
 
-    private Vector3 savedPosition;
-    private bool hasSavedPosition = false;
+    Vector3 savedPosition;
+    bool hasPosition = false;
 
     void Awake()
     {
@@ -20,21 +20,24 @@ public class PlayerPositionManager : MonoBehaviour
         }
     }
 
-    public void SavePlayerPosition(Vector3 position)
+    public void SavePosition(Vector3 position)
     {
         savedPosition = position;
-        hasSavedPosition = true;
-        Debug.Log("Position saved: " + position);
+        hasPosition = true;
     }
 
-    public bool TryLoadPlayerPosition(out Vector3 position)
+    public Vector3 GetSavedPosition()
     {
-        position = savedPosition;
-        return hasSavedPosition;
+        return savedPosition;
     }
 
-    public void ClearSavedPosition()
+    public bool HasPosition()
     {
-        hasSavedPosition = false;
+        return hasPosition;
+    }
+
+    public void ClearPosition()
+    {
+        hasPosition = false;
     }
 }
