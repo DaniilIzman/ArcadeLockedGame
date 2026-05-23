@@ -27,6 +27,14 @@ public class HumanMovementAMI : MonoBehaviour
 
         initialHeight = capsule.height;
         crouchHeight = initialHeight / 2f;
+
+        if (PlayerPositionManager.instance.HasPosition())
+        {
+            transform.position = PlayerPositionManager.instance.GetSavedPosition();
+            rb.constraints = RigidbodyConstraints.None;
+            rb.freezeRotation = true;
+            PlayerPositionManager.instance.ClearPosition();
+        }
     }
 
     public void OnMovement(InputValue value)
