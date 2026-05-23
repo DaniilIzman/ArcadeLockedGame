@@ -100,13 +100,18 @@ public class CollisionDetectorGG : MonoBehaviour
     {
         yield return new WaitForSeconds(respawnDelay);
 
-        Vector3 respawnPos = CheckpointManagerGG.instance.GetLastCheckpointPosition();
-        
-        respawnPos.y += respawnHeightOffset;
+        Vector3 respawnPos = levelStartPosition;
+        bool isCheckpointRespawn = false;
 
-        if (respawnPos == Vector3.zero)
+        if (CheckpointManagerGG.instance != null && CheckpointManagerGG.instance.HasCheckpointBeenReached())
         {
-            respawnPos = levelStartPosition;
+            respawnPos = CheckpointManagerGG.instance.GetLastCheckpointPosition();
+            isCheckpointRespawn = true;
+        }
+
+        if (isCheckpointRespawn)
+        {
+            respawnPos.y += respawnHeightOffset;
         }
 
         Quaternion respawnRot = levelStartRotation;
