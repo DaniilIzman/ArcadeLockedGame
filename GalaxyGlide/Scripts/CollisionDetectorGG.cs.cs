@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class CollisionDetectorGG : MonoBehaviour
 {
@@ -15,9 +17,6 @@ public class CollisionDetectorGG : MonoBehaviour
     [SerializeField] ParticleSystem crashParticleSystem;
     [SerializeField] ParticleSystem victoryParticleSystem;
 
-    [Header("Debug")]
-    [SerializeField] bool isCollidable = true;
-
     AudioSource audioSource;
     MovementGG movement;
     bool isControllable = true;
@@ -28,20 +27,14 @@ public class CollisionDetectorGG : MonoBehaviour
         movement = GetComponent<MovementGG>();
     }
 
-    void Update()
-    {
-        Debugging();
-    }
-
     void OnCollisionEnter(Collision other)
     {
-        if (!isControllable || !isCollidable)
+        if (!isControllable)
             return;
 
         switch (other.gameObject.tag)
         {
             case "Spawn":
-                Debug.Log("Spawnpoint");
                 break;
 
             case "Finish":
@@ -61,7 +54,8 @@ public class CollisionDetectorGG : MonoBehaviour
         audioSource.PlayOneShot(crashAudio);
         crashParticleSystem.Play();
         movement.enabled = false;
-        SceneTransitionManagerAMI.instance.ReloadCurrentScene(levelReloadDelay);
+
+        StartCoroutine(ReloadLevelCoroutine());
     }
 
     void EffectsAfterFinish()
@@ -71,18 +65,26 @@ public class CollisionDetectorGG : MonoBehaviour
         audioSource.PlayOneShot(victoryAudio);
         victoryParticleSystem.Play();
         movement.enabled = false;
-        SceneTransitionManagerAMI.instance.LoadNextScene(loadNextLevelDelay);
+
+        StartCoroutine(LoadNextLevelCoroutine());
     }
 
-    void Debugging()
+    IEnumerator ReloadLevelCoroutine()
     {
-        if (Keyboard.current.lKey.wasPressedThisFrame)
-            SceneTransitionManagerAMI.instance.LoadNextScene();
+        yield return new WaitForSeconds(levelReloadDelay);
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentScene);
+    }
 
-        else if (Keyboard.current.cKey.wasPressedThisFrame)
-        {
-            isCollidable = !isCollidable;
-            Debug.Log("Collisions: " + isCollidable);
-        }
+    IEnumerator LoadNextLevelCoroutine()
+    {
+        yield return new WaitForSeconds(loadNextLevelDelay);
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        int nextScene = currentScene + 1;
+
+        if (nextScene >= SceneManager.sceneCountInBuildSettings)
+            nextScene = 0;
+
+        SceneManager.LoadScene(nextScene);
     }
 }
