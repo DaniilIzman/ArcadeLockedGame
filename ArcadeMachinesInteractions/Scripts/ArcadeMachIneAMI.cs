@@ -59,10 +59,7 @@ public class ArcadeMachineAMI : MonoBehaviour
 
     void FreezePlayer()
     {
-        PlayerPositionManager.instance.SavePositionAndRotation(
-            playerTransform.position, 
-            playerTransform.rotation
-        );
+        PlayerPositionManager.instance.SavePositionAndRotation(playerTransform.position, playerTransform.rotation);
         
         playerMovement.enabled = false;
         playerCamera.enabled = false;
