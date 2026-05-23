@@ -28,12 +28,17 @@ public class HumanMovementAMI : MonoBehaviour
         initialHeight = capsule.height;
         crouchHeight = initialHeight / 2f;
 
-        if (PlayerPositionManager.instance.HasPosition())
+        if (PlayerPositionManager.instance.HasData())
         {
             transform.position = PlayerPositionManager.instance.GetSavedPosition();
+            transform.rotation = PlayerPositionManager.instance.GetSavedRotation();
+            
             rb.constraints = RigidbodyConstraints.None;
             rb.freezeRotation = true;
-            PlayerPositionManager.instance.ClearPosition();
+            
+            PlayerPositionManager.instance.ClearData();
+            
+            Debug.Log("Player restored to position: " + transform.position);
         }
     }
 

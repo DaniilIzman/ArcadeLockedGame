@@ -12,6 +12,7 @@ public class ArcadeMachineAMI : MonoBehaviour
     bool isLoading = false;
     Transform playerTransform;
     HumanMovementAMI playerMovement;
+    HumanCameraAMI playerCamera;
     Rigidbody playerRigidbody;
 
     void OnTriggerEnter(Collider other)
@@ -21,6 +22,7 @@ public class ArcadeMachineAMI : MonoBehaviour
             playerNear = true;
             playerTransform = other.transform;
             playerMovement = other.GetComponent<HumanMovementAMI>();
+            playerCamera = other.GetComponentInChildren<HumanCameraAMI>();
             playerRigidbody = other.GetComponent<Rigidbody>();
         }
     }
@@ -48,22 +50,30 @@ public class ArcadeMachineAMI : MonoBehaviour
     {
         isLoading = true;
         
-        PlayerPositionManager.instance.SavePosition(playerTransform.position);
-        playerMovement.enabled = false;
-        playerRigidbody.linearVelocity = Vector3.zero;
-        playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+        FreezePlayer();
         
         yield return new WaitForSeconds(loadDelay);
         
         SceneManager.LoadScene(gameScene);
     }
 
+    void FreezePlayer()
+    {
+        PlayerPositionManager.instance.SavePositionAndRotation(
+            playerTransform.position, 
+            playerTransform.rotation
+        );
+        
+        playerMovement.enabled = false;
+        playerCamera.enabled = false;
+        playerRigidbody.linearVelocity = Vector3.zero;
+        playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+    }
+
     bool IsPlayerGrounded()
     {
         if (playerMovement == null)
-        {
-            return false;     
-        }
+            return false;
 
         return playerMovement.GetGroundContactCount() > 0;
     }

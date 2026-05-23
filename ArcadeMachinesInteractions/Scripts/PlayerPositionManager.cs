@@ -5,7 +5,8 @@ public class PlayerPositionManager : MonoBehaviour
     public static PlayerPositionManager instance;
 
     Vector3 savedPosition;
-    bool hasPosition = false;
+    Quaternion savedRotation;
+    bool hasData = false;
 
     void Awake()
     {
@@ -20,10 +21,11 @@ public class PlayerPositionManager : MonoBehaviour
         }
     }
 
-    public void SavePosition(Vector3 position)
+    public void SavePositionAndRotation(Vector3 position, Quaternion rotation)
     {
         savedPosition = position;
-        hasPosition = true;
+        savedRotation = rotation;
+        hasData = true;
     }
 
     public Vector3 GetSavedPosition()
@@ -31,13 +33,18 @@ public class PlayerPositionManager : MonoBehaviour
         return savedPosition;
     }
 
-    public bool HasPosition()
+    public Quaternion GetSavedRotation()
     {
-        return hasPosition;
+        return savedRotation;
     }
 
-    public void ClearPosition()
+    public bool HasData()
     {
-        hasPosition = false;
+        return hasData;
+    }
+
+    public void ClearData()
+    {
+        hasData = false;
     }
 }
