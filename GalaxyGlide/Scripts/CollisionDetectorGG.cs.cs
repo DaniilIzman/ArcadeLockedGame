@@ -12,6 +12,9 @@ public class CollisionDetectorGG : MonoBehaviour
     [Header("Respawn Offset")]
     [SerializeField] float respawnHeightOffset = 2f;
 
+    [Header("Score")]
+    [SerializeField] int finishBonusPoints = 500;
+
     [Header("Audio")]
     [SerializeField] AudioClip victoryAudio;
     [SerializeField] AudioClip crashAudio;
@@ -23,6 +26,7 @@ public class CollisionDetectorGG : MonoBehaviour
     AudioSource audioSource;
     MovementGG movement;
     HealthSystemGG health;
+    ScoreSystemGG score;
     Rigidbody rb;
     Vector3 levelStartPosition;
     Quaternion levelStartRotation;
@@ -33,12 +37,19 @@ public class CollisionDetectorGG : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         movement = GetComponent<MovementGG>();
         health = GetComponent<HealthSystemGG>();
+        score = GetComponent<ScoreSystemGG>();
         rb = GetComponent<Rigidbody>();
+
+        if (audioSource == null) Debug.LogError("❌ AudioSource not found!");
+        if (movement == null) Debug.LogError("❌ MovementGG not found!");
+        if (health == null) Debug.LogError("❌ HealthSystemGG not found!");
+        if (score == null) Debug.LogError("❌ ScoreSystemGG not found!");
+        if (rb == null) Debug.LogError("❌ Rigidbody not found!");
 
         levelStartPosition = transform.position;
         levelStartRotation = transform.rotation;
         
-        Debug.Log("Level started at position: " + levelStartPosition);
+        Debug.Log("🎮 Level started at position: " + levelStartPosition);
     }
 
     void OnCollisionEnter(Collision other)
@@ -78,7 +89,7 @@ public class CollisionDetectorGG : MonoBehaviour
         }
         else
         {
-            Debug.Log("Game Over! Lives: 0");
+            Debug.Log("Game Over! Final Score: " + score.GetCurrentScore());
             StartCoroutine(GameOverCoroutine());
         }
     }
@@ -88,11 +99,13 @@ public class CollisionDetectorGG : MonoBehaviour
         isControllable = false;
         movement.enabled = false;
         
+        score.AddScore(finishBonusPoints);
+        
         audioSource.Stop();
         audioSource.PlayOneShot(victoryAudio);
         victoryParticleSystem.Play();
 
-        Debug.Log("Level finished!");
+        Debug.Log("🏁 Level finished! Final Score: " + score.GetCurrentScore());
         StartCoroutine(FinishLevelCoroutine());
     }
 
@@ -141,6 +154,7 @@ public class CollisionDetectorGG : MonoBehaviour
     void ReturnToArcadeRoom()
     {
         Debug.Log("RETURNING TO ARCADE ROOM");
+        Debug.Log("Final Score: " + score.GetCurrentScore());
         SceneManager.LoadScene("ArcadeRoom");
     }
 }

@@ -2,15 +2,27 @@ using UnityEngine;
 
 public class ScoreSystemGG : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    int currentScore = 0;
+
     void Start()
     {
-        
+        currentScore = 0;
+        Debug.Log("Score: " + currentScore);
     }
 
-    // Update is called once per frame
-    void Update()
+    public int GetCurrentScore()
     {
-        
+        return currentScore;
+    }
+
+    public void AddScore(int points)
+    {
+        currentScore += points;
+        Debug.Log("Score: " + currentScore + " (+" + points + ")");
+    }
+
+    public void ResetScore()
+    {
+        currentScore = 0;
     }
 }

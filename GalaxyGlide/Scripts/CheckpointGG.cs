@@ -1,13 +1,14 @@
 using UnityEngine;
 
-public class CheckpointGG : MonoBehaviour
+public class Checkpoint : MonoBehaviour
 {
     [SerializeField] int checkpointNumber = 1;
+    [SerializeField] int checkpointPoints = 100;
     bool alreadySaved = false;
 
     void Start()
     {
-        Debug.Log("Checkpoint" + checkpointNumber + " initialized");
+        Debug.Log("Checkpoint " + checkpointNumber + " initialized");
     }
 
     void OnCollisionEnter(Collision collision)
@@ -22,7 +23,13 @@ public class CheckpointGG : MonoBehaviour
 
             CheckpointManagerGG.instance.SaveCheckpointPosition(checkpointPos, Quaternion.identity);
             
-            Debug.Log("CHECKPOINT" + checkpointNumber + " SAVED!");
+            ScoreSystemGG score = collision.gameObject.GetComponent<ScoreSystemGG>();
+            if (score != null)
+            {
+                score.AddScore(checkpointPoints);
+            }
+            
+            Debug.Log("CHECKPOINT " + checkpointNumber + " SAVED!");
             Debug.Log("Position: " + checkpointPos);
         }
     }
