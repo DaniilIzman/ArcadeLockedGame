@@ -113,4 +113,9 @@ public class HumanMovementAMI : MonoBehaviour
             groundContactCount--;
         }
     }
+
+    public int GetGroundContactCount()
+    {
+        return groundContactCount;
+    }
 }
