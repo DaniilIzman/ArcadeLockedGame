@@ -2,15 +2,28 @@ using UnityEngine;
 
 public class CheckpointGG : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] int checkpointNumber = 1;
+    bool alreadySaved = false;
+
     void Start()
     {
-        
+        Debug.Log("Checkpoint" + checkpointNumber + " initialized");
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnCollisionEnter(Collision collision)
     {
-        
+        Debug.Log("Collision detected with: " + collision.gameObject.name);
+
+        if (collision.gameObject.GetComponent<MovementGG>() != null && !alreadySaved)
+        {
+            alreadySaved = true;
+            
+            Vector3 checkpointPos = transform.position;
+
+            CheckpointManagerGG.instance.SaveCheckpointPosition(checkpointPos, Quaternion.identity);
+            
+            Debug.Log("CHECKPOINT" + checkpointNumber + " SAVED!");
+            Debug.Log("Position: " + checkpointPos);
+        }
     }
 }
