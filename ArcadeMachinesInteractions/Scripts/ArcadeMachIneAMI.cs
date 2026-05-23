@@ -35,7 +35,7 @@ public class ArcadeMachineAMI : MonoBehaviour
 
     void Update()
     {
-        if (playerNear && !isLoading)
+        if (playerNear && !isLoading && IsPlayerGrounded())
         {
             if (Keyboard.current.eKey.wasPressedThisFrame)
             {
@@ -56,5 +56,15 @@ public class ArcadeMachineAMI : MonoBehaviour
         yield return new WaitForSeconds(loadDelay);
         
         SceneManager.LoadScene(gameScene);
+    }
+
+    bool IsPlayerGrounded()
+    {
+        if (playerMovement == null)
+        {
+            return false;     
+        }
+
+        return playerMovement.GetGroundContactCount() > 0;
     }
 }
