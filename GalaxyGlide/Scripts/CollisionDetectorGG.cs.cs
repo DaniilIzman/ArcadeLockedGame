@@ -22,6 +22,7 @@ public class CollisionDetectorGG : MonoBehaviour
 
     AudioSource audioSource;
     MovementGG movement;
+    HealthSystemGG health;
     Rigidbody rb;
     Vector3 levelStartPosition;
     Quaternion levelStartRotation;
@@ -31,6 +32,7 @@ public class CollisionDetectorGG : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         movement = GetComponent<MovementGG>();
+        health = GetComponent<HealthSystemGG>();
         rb = GetComponent<Rigidbody>();
 
         levelStartPosition = transform.position;
@@ -67,8 +69,18 @@ public class CollisionDetectorGG : MonoBehaviour
         audioSource.PlayOneShot(crashAudio);
         crashParticleSystem.Play();
 
-        Debug.Log("Crashed!");
-        StartCoroutine(RespawnCoroutine());
+        bool hasLivesLeft = health.TakeDamage();
+
+        if (hasLivesLeft)
+        {
+            Debug.Log("Crashed! Lives left: " + health.GetCurrentLives());
+            StartCoroutine(RespawnCoroutine());
+        }
+        else
+        {
+            Debug.Log("Game Over! Lives: 0");
+            StartCoroutine(GameOverCoroutine());
+        }
     }
 
     void OnGameFinish()
@@ -109,6 +121,12 @@ public class CollisionDetectorGG : MonoBehaviour
         movement.enabled = true;
     }
 
+    IEnumerator GameOverCoroutine()
+    {
+        yield return new WaitForSeconds(respawnDelay);
+        ReturnToArcadeRoom();
+    }
+
     IEnumerator FinishLevelCoroutine()
     {
         yield return new WaitForSeconds(finishDelay);
@@ -117,7 +135,7 @@ public class CollisionDetectorGG : MonoBehaviour
 
     void ReturnToArcadeRoom()
     {
+        Debug.Log("RETURNING TO ARCADE ROOM");
         SceneManager.LoadScene("ArcadeRoom");
     }
-    
 }
