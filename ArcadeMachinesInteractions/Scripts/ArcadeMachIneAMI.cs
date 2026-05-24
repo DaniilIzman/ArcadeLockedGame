@@ -5,16 +5,25 @@ using System.Collections;
 
 public class ArcadeMachineAMI : MonoBehaviour
 {
+    [Header("Machine Settings")]
+    [SerializeField] string machineName = "Game_1";
     [SerializeField] string gameScene = "GameScene";
     [SerializeField] float loadDelay = 2f;
     [SerializeField] int gameCost = 10;
 
     bool playerNear = false;
     bool isLoading = false;
+    bool isInteractable = true;
     Transform playerTransform;
     HumanMovementAMI playerMovement;
     HumanCameraAMI playerCamera;
     Rigidbody playerRigidbody;
+    ArcadeMachineAudio arcadeAudio;
+
+    void Start()
+    {
+        arcadeAudio = GetComponent<ArcadeMachineAudio>();
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -38,17 +47,17 @@ public class ArcadeMachineAMI : MonoBehaviour
 
     void Update()
     {
-        if (playerNear && !isLoading && IsPlayerGrounded())
+        if (playerNear && !isLoading && IsPlayerGrounded() && isInteractable)
         {
             if (Keyboard.current.eKey.wasPressedThisFrame)
             {
                 if (CanAffordGame())
                 {
+                    if (arcadeAudio != null)
+                    {
+                        arcadeAudio.PlayConfirmSound();
+                    }
                     StartCoroutine(LoadGameScene());
-                }
-                else
-                {
-                    Debug.Log(" Not enough credits! Need " + gameCost + ", have " + PlayerCreditsAMI.instance.GetCredits());
                 }
             }
         }
@@ -85,7 +94,7 @@ public class ArcadeMachineAMI : MonoBehaviour
         }
         
         PlayerCreditsAMI.instance.SpendCredits(gameCost);
-        Debug.Log("Game cost: -" + gameCost + " credits");
+        Debug.Log(machineName + " - Game cost: -" + gameCost + " credits");
         
         FreezePlayer();
         
@@ -112,8 +121,18 @@ public class ArcadeMachineAMI : MonoBehaviour
         return playerMovement.GetGroundContactCount() > 0;
     }
 
+    public void SetInteractable(bool value)
+    {
+        isInteractable = value;
+    }
+
     public int GetGameCost()
     {
         return gameCost;
+    }
+
+    public string GetMachineName()
+    {
+        return machineName;
     }
 }

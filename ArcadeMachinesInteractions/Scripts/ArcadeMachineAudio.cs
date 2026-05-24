@@ -3,16 +3,15 @@ using UnityEngine;
 public class ArcadeMachineAudio : MonoBehaviour
 {
     [Header("Audio Clips")]
-    [SerializeField] AudioClip approachSound;
-    [SerializeField] AudioClip startSound;
-    [SerializeField] AudioClip errorSound;
+    [SerializeField] AudioClip textAppearSound;
+    [SerializeField] AudioClip insufficientCreditsSound;
+    [SerializeField] AudioClip confirmSound;
 
     [Header("Audio Settings")]
     [SerializeField] float soundVolume = 0.7f;
     [SerializeField] int audioPriority = 128;
 
     AudioSource audioSource;
-    bool hasPlayedApproachSound = false;
 
     void Start()
     {
@@ -30,58 +29,30 @@ public class ArcadeMachineAudio : MonoBehaviour
         Debug.Log("ArcadeMachineAudio initialized");
     }
 
-    void OnTriggerEnter(Collider other)
+    public void PlayTextAppearSound()
     {
-        if (other.CompareTag("Player"))
+        if (textAppearSound != null)
         {
-            if (!hasPlayedApproachSound)
-            {
-                PlayApproachSound();
-                hasPlayedApproachSound = true;
-            }
+            audioSource.PlayOneShot(textAppearSound, soundVolume);
+            Debug.Log("Text appear sound played");
         }
     }
 
-    void OnTriggerExit(Collider other)
+    public void PlayInsufficientCreditsSound()
     {
-        if (other.CompareTag("Player"))
+        if (insufficientCreditsSound != null)
         {
-            hasPlayedApproachSound = false;
+            audioSource.PlayOneShot(insufficientCreditsSound, soundVolume);
+            Debug.Log("Insufficient credits sound played");
         }
     }
 
-    public void PlayStartSound()
+    public void PlayConfirmSound()
     {
-        if (startSound != null)
+        if (confirmSound != null)
         {
-            audioSource.PlayOneShot(startSound, soundVolume);
-            Debug.Log("Start sound played");
-        }
-        else
-        {
-            Debug.LogWarning("Start sound not assigned!");
-        }
-    }
-
-    public void PlayErrorSound()
-    {
-        if (errorSound != null)
-        {
-            audioSource.PlayOneShot(errorSound, soundVolume);
-            Debug.Log("Error sound played");
-        }
-        else
-        {
-            Debug.LogWarning("Error sound not assigned!");
-        }
-    }
-
-    void PlayApproachSound()
-    {
-        if (approachSound != null)
-        {
-            audioSource.PlayOneShot(approachSound, soundVolume);
-            Debug.Log("Approach sound played");
+            audioSource.PlayOneShot(confirmSound, soundVolume);
+            Debug.Log("Confirm sound played");
         }
     }
 }

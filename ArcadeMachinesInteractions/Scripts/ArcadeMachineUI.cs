@@ -9,11 +9,14 @@ public class ArcadeMachineUI : MonoBehaviour
 
     HumanMovementAMI playerMovement;
     ArcadeMachineAMI arcadeMachine;
+    ArcadeMachineAudio arcadeAudio;
+    bool hasShownInsufficientAlert = false;
 
     void Start()
     {
         interactionText.enabled = false;
         arcadeMachine = GetComponent<ArcadeMachineAMI>();
+        arcadeAudio = GetComponent<ArcadeMachineAudio>();
     }
 
     void Update()
@@ -28,6 +31,7 @@ public class ArcadeMachineUI : MonoBehaviour
             else
             {
                 interactionText.enabled = false;
+                hasShownInsufficientAlert = false;
             }
         }
     }
@@ -41,11 +45,23 @@ public class ArcadeMachineUI : MonoBehaviour
         {
             interactionText.text = playText + " (Cost: " + gameCost + ")";
             interactionText.color = Color.white;
+            arcadeMachine.SetInteractable(true);
+            hasShownInsufficientAlert = false;
         }
         else
         {
             interactionText.text = insufficientText + " (Need: " + gameCost + ")";
             interactionText.color = Color.red;
+            arcadeMachine.SetInteractable(false);
+            
+            if (!hasShownInsufficientAlert)
+            {
+                if (arcadeAudio != null)
+                {
+                    arcadeAudio.PlayInsufficientCreditsSound();
+                }
+                hasShownInsufficientAlert = true;
+            }
         }
     }
 
@@ -55,6 +71,19 @@ public class ArcadeMachineUI : MonoBehaviour
         {
             playerMovement = other.GetComponent<HumanMovementAMI>();
             arcadeMachine = GetComponent<ArcadeMachineAMI>();
+            arcadeAudio = GetComponent<ArcadeMachineAudio>();
+            
+            int gameCost = arcadeMachine.GetGameCost();
+            int currentCredits = PlayerCreditsAMI.instance.GetCredits();
+            
+            if (currentCredits >= gameCost)
+            {
+                if (arcadeAudio != null)
+                {
+                    arcadeAudio.PlayTextAppearSound();
+                }
+            }
+            
             interactionText.enabled = true;
         }
     }
@@ -65,6 +94,7 @@ public class ArcadeMachineUI : MonoBehaviour
         {
             interactionText.enabled = false;
             playerMovement = null;
+            hasShownInsufficientAlert = false;
         }
     }
 
