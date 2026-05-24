@@ -7,6 +7,7 @@ public class ArcadeMachineAMI : MonoBehaviour
 {
     [SerializeField] string gameScene = "GameScene";
     [SerializeField] float loadDelay = 2f;
+    [SerializeField] int gameCost = 10;
 
     bool playerNear = false;
     bool isLoading = false;
@@ -41,14 +42,44 @@ public class ArcadeMachineAMI : MonoBehaviour
         {
             if (Keyboard.current.eKey.wasPressedThisFrame)
             {
-                StartCoroutine(LoadGameScene());
+                if (CanAffordGame())
+                {
+                    StartCoroutine(LoadGameScene());
+                }
+                else
+                {
+                    Debug.Log(" Not enough credits! Need " + gameCost + ", have " + PlayerCreditsAMI.instance.GetCredits());
+                }
             }
+        }
+    }
+
+    bool CanAffordGame()
+    {
+        if (PlayerCreditsAMI.instance == null)
+        {
+            Debug.LogError("PlayerCreditsAMI not found!");
+            return false;
+        }
+
+        int currentCredits = PlayerCreditsAMI.instance.GetCredits();
+        
+        if (currentCredits >= gameCost)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
     IEnumerator LoadGameScene()
     {
         isLoading = true;
+        
+        PlayerCreditsAMI.instance.SpendCredits(gameCost);
+        Debug.Log("Game cost: -" + gameCost + " credits");
         
         FreezePlayer();
         
