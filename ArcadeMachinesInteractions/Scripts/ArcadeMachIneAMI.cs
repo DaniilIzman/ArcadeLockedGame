@@ -78,6 +78,12 @@ public class ArcadeMachineAMI : MonoBehaviour
     {
         isLoading = true;
         
+        ArcadeMachineUI uiScript = GetComponent<ArcadeMachineUI>();
+        if (uiScript != null)
+        {
+            uiScript.HideInteractionText();
+        }
+        
         PlayerCreditsAMI.instance.SpendCredits(gameCost);
         Debug.Log("Game cost: -" + gameCost + " credits");
         
