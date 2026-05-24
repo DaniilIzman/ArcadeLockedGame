@@ -111,4 +111,9 @@ public class ArcadeMachineAMI : MonoBehaviour
 
         return playerMovement.GetGroundContactCount() > 0;
     }
+
+    public int GetGameCost()
+    {
+        return gameCost;
+    }
 }

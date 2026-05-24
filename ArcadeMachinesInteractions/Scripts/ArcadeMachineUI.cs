@@ -4,7 +4,8 @@ using TMPro;
 public class ArcadeMachineUI : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI interactionText;
-    [SerializeField] string displayText = "Press E to play";
+    [SerializeField] string playText = "Press E to play";
+    [SerializeField] string insufficientText = "Insufficient Credits";
 
     HumanMovementAMI playerMovement;
     ArcadeMachineAMI arcadeMachine;
@@ -12,14 +13,16 @@ public class ArcadeMachineUI : MonoBehaviour
     void Start()
     {
         interactionText.enabled = false;
+        arcadeMachine = GetComponent<ArcadeMachineAMI>();
     }
 
     void Update()
     {
-        if (playerMovement != null)
+        if (playerMovement != null && arcadeMachine != null)
         {
             if (playerMovement.GetGroundContactCount() > 0)
             {
+                UpdateInteractionText();
                 interactionText.enabled = true;
             }
             else
@@ -29,14 +32,29 @@ public class ArcadeMachineUI : MonoBehaviour
         }
     }
 
+    void UpdateInteractionText()
+    {
+        int gameCost = arcadeMachine.GetGameCost();
+        int currentCredits = PlayerCreditsAMI.instance.GetCredits();
+        
+        if (currentCredits >= gameCost)
+        {
+            interactionText.text = playText + " (Cost: " + gameCost + ")";
+            interactionText.color = Color.white;
+        }
+        else
+        {
+            interactionText.text = insufficientText + " (Need: " + gameCost + ")";
+            interactionText.color = Color.red;
+        }
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             playerMovement = other.GetComponent<HumanMovementAMI>();
             arcadeMachine = GetComponent<ArcadeMachineAMI>();
-            
-            interactionText.text = displayText;
             interactionText.enabled = true;
         }
     }
@@ -47,12 +65,12 @@ public class ArcadeMachineUI : MonoBehaviour
         {
             interactionText.enabled = false;
             playerMovement = null;
-            arcadeMachine = null;
         }
     }
 
     public void HideInteractionText()
     {
+        this.enabled = false;
         interactionText.enabled = false;
     }
 }
