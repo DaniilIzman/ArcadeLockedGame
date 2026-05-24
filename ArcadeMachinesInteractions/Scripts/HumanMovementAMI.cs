@@ -11,22 +11,36 @@ public class HumanMovementAMI : MonoBehaviour
     [Header("Ground Detection")]
     [SerializeField] int groundContactCount = 0;
 
+    [Header("Footstep Settings")]
+    [SerializeField] AudioClip[] footstepClips;
+    [SerializeField] float footstepVolume = 0.5f;
+    [SerializeField] float footstepInterval = 0.5f;
+    [SerializeField] float crouchFootstepInterval = 0.7f;
+
     Rigidbody rb;
     CapsuleCollider capsule;
     Vector3 movement;
+    AudioSource audioSource;
 
     public bool isCrouching = false;
     float initialHeight;
     float crouchHeight;
+    float footstepTimer = 0f;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         capsule = GetComponent<CapsuleCollider>();
+        audioSource = GetComponent<AudioSource>();
         rb.freezeRotation = true;
 
         initialHeight = capsule.height;
         crouchHeight = initialHeight / 2f;
+
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
 
         if (PlayerPositionManager.instance.HasData())
         {
@@ -72,6 +86,7 @@ public class HumanMovementAMI : MonoBehaviour
     void FixedUpdate()
     {
         ApplyMovement();
+        HandleFootsteps();
     }
 
     void ApplyMovement()
@@ -96,6 +111,44 @@ public class HumanMovementAMI : MonoBehaviour
         {
             rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
         }
+    }
+
+    void HandleFootsteps()
+    {
+        if (!IsGrounded())
+        {
+            footstepTimer = 0f;
+            return;
+        }
+
+        bool isMoving = movement.magnitude > 0.1f;
+
+        if (!isMoving)
+        {
+            footstepTimer = 0f;
+            return;
+        }
+
+        float currentInterval = isCrouching ? crouchFootstepInterval : footstepInterval;
+        footstepTimer -= Time.fixedDeltaTime;
+
+        if (footstepTimer <= 0f)
+        {
+            PlayFootstep();
+            footstepTimer = currentInterval;
+        }
+    }
+
+    void PlayFootstep()
+    {
+        if (footstepClips.Length == 0)
+        {
+            Debug.LogWarning("No footstep clips assigned!");
+            return;
+        }
+
+        AudioClip randomClip = footstepClips[Random.Range(0, footstepClips.Length)];
+        audioSource.PlayOneShot(randomClip, footstepVolume);
     }
 
     bool IsGrounded()
