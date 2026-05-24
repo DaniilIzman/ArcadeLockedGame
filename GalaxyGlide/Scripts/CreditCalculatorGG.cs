@@ -2,15 +2,14 @@ using UnityEngine;
 
 public class CreditCalculatorGG : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] float scoreToCredit = 0.2f;
 
-    // Update is called once per frame
-    void Update()
+    public int CalculateCredits(int score)
     {
+        int creditsEarned = Mathf.FloorToInt(score * scoreToCredit);
         
+        Debug.Log("Credits earned: " + creditsEarned + " (score: " + score + ")");
+        
+        return creditsEarned;
     }
 }
