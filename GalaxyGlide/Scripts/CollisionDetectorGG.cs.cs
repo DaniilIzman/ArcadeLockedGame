@@ -40,11 +40,11 @@ public class CollisionDetectorGG : MonoBehaviour
         score = GetComponent<ScoreSystemGG>();
         rb = GetComponent<Rigidbody>();
 
-        if (audioSource == null) Debug.LogError("❌ AudioSource not found!");
-        if (movement == null) Debug.LogError("❌ MovementGG not found!");
-        if (health == null) Debug.LogError("❌ HealthSystemGG not found!");
-        if (score == null) Debug.LogError("❌ ScoreSystemGG not found!");
-        if (rb == null) Debug.LogError("❌ Rigidbody not found!");
+        if (audioSource == null) Debug.LogError("AudioSource not found!");
+        if (movement == null) Debug.LogError("MovementGG not found!");
+        if (health == null) Debug.LogError("HealthSystemGG not found!");
+        if (score == null) Debug.LogError("ScoreSystemGG not found!");
+        if (rb == null) Debug.LogError("Rigidbody not found!");
 
         levelStartPosition = transform.position;
         levelStartRotation = transform.rotation;
@@ -105,7 +105,7 @@ public class CollisionDetectorGG : MonoBehaviour
         audioSource.PlayOneShot(victoryAudio);
         victoryParticleSystem.Play();
 
-        Debug.Log("🏁 Level finished! Final Score: " + score.GetCurrentScore());
+        Debug.Log("Level finished! Final Score: " + score.GetCurrentScore());
         StartCoroutine(FinishLevelCoroutine());
     }
 
@@ -155,6 +155,24 @@ public class CollisionDetectorGG : MonoBehaviour
     {
         Debug.Log("RETURNING TO ARCADE ROOM");
         Debug.Log("Final Score: " + score.GetCurrentScore());
+        
+        CreditCalculatorGG creditCalc = GetComponent<CreditCalculatorGG>();
+        if (creditCalc != null)
+        {
+            int creditsEarned = creditCalc.CalculateCredits(score.GetCurrentScore());
+            Debug.Log("Credits earned: " + creditsEarned);
+            PlayerCreditsAMI.instance.AddCredits(creditsEarned);
+        }
+        else
+        {
+            Debug.LogError("CreditCalculatorGG not found on player!");
+        }
+        
+        if (CheckpointManagerGG.instance != null)
+        {
+            CheckpointManagerGG.instance.ResetCheckpoints();
+        }
+        
         SceneManager.LoadScene("ArcadeRoom");
     }
 }
