@@ -7,7 +7,7 @@ public class ScoreSystemGG : MonoBehaviour
     void Start()
     {
         currentScore = 0;
-        Debug.Log("Score: " + currentScore);
+        Debug.Log("Score: 0");
     }
 
     public int GetCurrentScore()
