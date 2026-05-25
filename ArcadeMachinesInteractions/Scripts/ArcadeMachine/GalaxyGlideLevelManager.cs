@@ -2,15 +2,18 @@ using UnityEngine;
 
 public class GalaxyGlideLevelManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [System.Serializable]
+    public class Level
     {
-        
+        public string levelName;
+        public string sceneName;
     }
 
-    // Update is called once per frame
-    void Update()
+    [Header("Galaxy Glide Levels")]
+    [SerializeField] Level[] levels;
+
+    public Level[] GetLevels()
     {
-        
+        return levels;
     }
 }
