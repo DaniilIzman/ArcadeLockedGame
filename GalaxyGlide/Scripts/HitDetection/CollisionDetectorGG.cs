@@ -49,7 +49,7 @@ public class CollisionDetectorGG : MonoBehaviour
         levelStartPosition = transform.position;
         levelStartRotation = transform.rotation;
         
-        Debug.Log("Level started at position: " + levelStartPosition);
+        Debug.Log("🎮 Level started at position: " + levelStartPosition);
     }
 
     void OnCollisionEnter(Collision other)
@@ -158,7 +158,7 @@ public class CollisionDetectorGG : MonoBehaviour
         
         if (PlayerCreditsAMI.instance == null)
         {
-            Debug.LogError("PlayerCreditsAMI not found!");
+            Debug.LogError("❌ PlayerCreditsAMI not found!");
             SceneManager.LoadScene("ArcadeRoom");
             return;
         }
@@ -167,7 +167,7 @@ public class CollisionDetectorGG : MonoBehaviour
         if (creditCalc != null)
         {
             int creditsEarned = creditCalc.CalculateCredits(score.GetCurrentScore());
-            Debug.Log("Credits earned: " + creditsEarned);
+            Debug.Log("💳 Credits earned: " + creditsEarned);
             PlayerCreditsAMI.instance.AddCredits(creditsEarned);
         }
         else

@@ -8,7 +8,7 @@ public class CreditCalculatorGG : MonoBehaviour
     {
         int creditsEarned = Mathf.FloorToInt(score * scoreToCredit);
         
-        Debug.Log("Credits earned: " + creditsEarned + " (score: " + score + ")");
+        Debug.Log("💳 Credits earned: " + creditsEarned + " (score: " + score + ")");
         
         return creditsEarned;
     }
