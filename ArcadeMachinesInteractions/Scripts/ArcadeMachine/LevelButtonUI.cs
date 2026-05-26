@@ -11,6 +11,9 @@ public class LevelButtonUI : MonoBehaviour
     [SerializeField] AudioClip clickSound;
     [SerializeField] float clickVolume = 0.7f;
 
+    [Header("Delay")]
+    [SerializeField] float sceneLoadDelay = 1f;
+
     Button button;
     AudioSource audioSource;
 
@@ -41,7 +44,7 @@ public class LevelButtonUI : MonoBehaviour
 
     System.Collections.IEnumerator LoadScene()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(sceneLoadDelay);
         SceneManager.LoadScene(sceneName);
     }
 }
