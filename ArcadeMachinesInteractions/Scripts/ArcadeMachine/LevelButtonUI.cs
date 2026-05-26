@@ -36,6 +36,11 @@ public class LevelButtonUI : MonoBehaviour
 
     void OnClick()
     {
+        button.interactable = false;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
         if (clickSound != null)
             audioSource.PlayOneShot(clickSound, clickVolume);
 
