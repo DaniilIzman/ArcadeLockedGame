@@ -1,18 +1,23 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class HealthOD : MonoBehaviour
 {
-    [SerializeField] int BumpMax;
-    public bool BumpMaxActivate;
+    [SerializeField] private int BumpMax = 3;
+    public bool BumpMaxActivate = true;
     public int bumpCounter = 0;
-    void OnCollisionEnter(Collision other)
+    
+    public bool isInvulnerable = false;
+
+    private void OnCollisionEnter(Collision other)
     {
-        if(!other.gameObject.CompareTag("Hit") && !other.gameObject.CompareTag("Ground") && BumpMaxActivate)
+        if (!BumpMaxActivate || isInvulnerable) return;
+
+        if (!other.gameObject.CompareTag("Hit") && !other.gameObject.CompareTag("Ground"))
         {
             bumpCounter++;
             Debug.Log("You've bumped into objects " + bumpCounter + " times"); 
-            if(bumpCounter >= BumpMax)
+
+            if (bumpCounter >= BumpMax)
             {
                 Debug.Log("Game Over!");
                 Time.timeScale = 0f;
