@@ -5,12 +5,7 @@ public class ScoringOD : MonoBehaviour
     [Header("Score Settings")]
     public float ScoreMultiplier = 1f;
     
-    private int _currentScore;
-
-    public int CurrentScore
-    {
-        get { return _currentScore; }
-    }
+    public int CurrentScore = 0;
 
     void Start()
     {
@@ -20,13 +15,13 @@ public class ScoringOD : MonoBehaviour
     public void AddScore(int basePoints)
     {
         int finalPoints = Mathf.RoundToInt(basePoints * ScoreMultiplier);
-        _currentScore += finalPoints;
+        CurrentScore += finalPoints;
 
-        Debug.Log($"Score Added: +{finalPoints}. Total: {_currentScore}");
+        Debug.Log($"Score Added: +{finalPoints}. Total: {CurrentScore}");
     }
 
     public void ResetScore()
     {
-        _currentScore = 0;
+        CurrentScore = 0;
     }
 }
