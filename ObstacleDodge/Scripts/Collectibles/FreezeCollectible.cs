@@ -1,28 +1,43 @@
 using UnityEngine;
 using System.Collections;
+
 public class FreezeCollectible : MonoBehaviour
 {
-    [SerializeField] float FreezeTimer = 0f;
-    HealthOD PlayerHealth;
-    MovementOD PlayerMovement;
-    void Awake()
+    [SerializeField] private float freezeTimer = 2f;
+
+    private void OnTriggerEnter(Collider other)
     {
-        PlayerHealth = FindAnyObjectByType<HealthOD>();
-        PlayerMovement = FindAnyObjectByType<MovementOD>();
-    }
-    IEnumerator UnfreezeAfter(float time)
-    {
-        yield return new WaitForSeconds(time);
-        PlayerMovement.canMove = true;
-    }
-    void OnTriggerEnter(Collider other)
-    {
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            PlayerMovement.canMove = false;
-            PlayerMovement.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
-            PlayerMovement.StartCoroutine(UnfreezeAfter(FreezeTimer));
-            Destroy(gameObject);
+            MovementOD playerMovement = other.GetComponent<MovementOD>();
+            
+            if (playerMovement != null)
+            {
+                StartCoroutine(FreezeRoutine(playerMovement));
+            }
         }
+    }
+
+    private IEnumerator FreezeRoutine(MovementOD playerMovement)
+    {
+        Collider col = GetComponent<Collider>();
+        if (col != null) col.enabled = false;
+
+        MeshRenderer mesh = GetComponent<MeshRenderer>();
+        if (mesh != null) mesh.enabled = false;
+
+        playerMovement.canMove = false;
+        
+        Rigidbody rb = playerMovement.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f); 
+        }
+
+        yield return new WaitForSeconds(freezeTimer);
+
+        playerMovement.canMove = true;
+
+        Destroy(gameObject);
     }
 }
