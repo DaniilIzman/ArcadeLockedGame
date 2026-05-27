@@ -2,26 +2,40 @@ using UnityEngine;
 
 public class ScoringOD : MonoBehaviour
 {
-    [Header("Score Settings")]
-    public float ScoreMultiplier = 1f;
-    
-    public int CurrentScore = 0;
+    public static ScoringOD instance;
+
+    int currentScore = 0;
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
         ResetScore();
     }
 
-    public void AddScore(int basePoints)
+    public void AddScore(int points)
     {
-        int finalPoints = Mathf.RoundToInt(basePoints * ScoreMultiplier);
-        CurrentScore += finalPoints;
+        currentScore += points;
+        Debug.Log($"Score: +{points}. Total: {currentScore}");
+    }
 
-        Debug.Log($"Score Added: +{finalPoints}. Total: {CurrentScore}");
+    public int GetCurrentScore()
+    {
+        return currentScore;
     }
 
     public void ResetScore()
     {
-        CurrentScore = 0;
+        currentScore = 0;
     }
 }
