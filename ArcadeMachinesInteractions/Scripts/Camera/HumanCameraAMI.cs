@@ -2,20 +2,10 @@ using UnityEngine;
 
 public class HumanCameraAMI : MonoBehaviour
 {
-    [Header("Mouse Settings")]
-    public float mouseSensitivityX = 100f;
-    public float mouseSensitivityY = 100f;
-
-    [Header("Camera Limits")]
-    public float angleLimit = 90f;
-
     [Header("References")]
-    public Transform playerBody;
-
-    float xRotation = 0f;
+    [SerializeField] Transform playerBody;
 
     HumanMovementAMI movement;
-
     Vector3 originalLocalPosition;
 
     void Start()
@@ -24,23 +14,14 @@ public class HumanCameraAMI : MonoBehaviour
         Cursor.visible = false;
 
         movement = playerBody.GetComponent<HumanMovementAMI>();
-
         originalLocalPosition = transform.localPosition;
+
+        ResetCamera();
     }
 
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivityX * Time.deltaTime;
-
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivityY * Time.deltaTime;
-
-        xRotation -= mouseY;
-
-        xRotation = Mathf.Clamp(xRotation, -angleLimit, angleLimit);
-
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-
-        playerBody.Rotate(Vector3.up * mouseX);
+        transform.localRotation = Quaternion.identity;
 
         UpdateCrouchCamera();
     }
@@ -49,11 +30,17 @@ public class HumanCameraAMI : MonoBehaviour
     {
         Vector3 newPosition = originalLocalPosition;
 
-        if (movement.isCrouching)
+        if (movement != null && movement.isCrouching)
         {
             newPosition.y -= 0.5f;
         }
 
         transform.localPosition = newPosition;
+    }
+
+    public void ResetCamera()
+    {
+        transform.localRotation = Quaternion.identity;
+        transform.localPosition = originalLocalPosition;
     }
 }
