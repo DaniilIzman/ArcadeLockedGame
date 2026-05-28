@@ -7,10 +7,20 @@ public class SpeedCollectible : MonoBehaviour
     [SerializeField] private bool speedTimerActivate = true;
     [SerializeField] private float speedTimer = 5f;
 
+    CollectibleAudio collectibleAudio;
+
+    void Start()
+    {
+        collectibleAudio = GetComponent<CollectibleAudio>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            if (collectibleAudio != null)
+                collectibleAudio.PlayCollectSound();
+
             MovementOD playerMovement = other.GetComponent<MovementOD>();
             
             if (playerMovement != null)
