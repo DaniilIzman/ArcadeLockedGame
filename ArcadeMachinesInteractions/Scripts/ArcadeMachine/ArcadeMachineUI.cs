@@ -23,7 +23,7 @@ public class ArcadeMachineUI : MonoBehaviour
     {
         if (playerMovement != null && arcadeMachine != null)
         {
-            if (playerMovement.GetGroundContactCount() > 0)
+            if (!playerMovement.isMoving)
             {
                 UpdateInteractionText();
                 interactionText.enabled = true;
@@ -83,8 +83,6 @@ public class ArcadeMachineUI : MonoBehaviour
                     arcadeAudio.PlayTextAppearSound();
                 }
             }
-            
-            interactionText.enabled = true;
         }
     }
 
