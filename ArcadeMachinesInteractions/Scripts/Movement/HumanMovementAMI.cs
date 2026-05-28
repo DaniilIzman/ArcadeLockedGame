@@ -1,179 +1,80 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
+using System.Collections;
 
 public class HumanMovementAMI : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    [SerializeField] float moveSpeed = 5f;
-    [SerializeField] float jumpForce = 5f;
-    [SerializeField] float crouchSpeedMultiplier = 0.5f;
+    [Header("Grid Settings")]
+    public float moveDistance = 2f;
+    public float moveDuration = 0.25f;
+    public float turnDuration = 0.2f;
+    public LayerMask obstacleLayer;
 
-    [Header("Ground Detection")]
-    [SerializeField] int groundContactCount = 0;
-
-    [Header("Footstep Settings")]
-    [SerializeField] AudioClip[] footstepClips;
-    [SerializeField] float footstepVolume = 0.5f;
-    [SerializeField] float footstepInterval = 0.5f;
-    [SerializeField] float crouchFootstepInterval = 0.7f;
-
-    Rigidbody rb;
-    CapsuleCollider capsule;
-    Vector3 movement;
-    AudioSource audioSource;
-
+    public bool isMoving { get; private set; } 
     public bool isCrouching = false;
-    float initialHeight;
-    float crouchHeight;
-    float footstepTimer = 0f;
 
-    void Start()
+    void Update()
     {
-        rb = GetComponent<Rigidbody>();
-        capsule = GetComponent<CapsuleCollider>();
-        audioSource = GetComponent<AudioSource>();
-        rb.freezeRotation = true;
+        if (isMoving) return;
 
-        initialHeight = capsule.height;
-        crouchHeight = initialHeight / 2f;
+        if (Input.GetKeyDown(KeyCode.W))
+            TryMove(transform.forward);
+        else if (Input.GetKeyDown(KeyCode.S))
+            TryMove(-transform.forward);
 
-        if (audioSource == null)
-        {
-            audioSource = gameObject.AddComponent<AudioSource>();
-        }
-
-        if (PlayerPositionManager.instance.HasData())
-        {
-            transform.position = PlayerPositionManager.instance.GetSavedPosition();
-            transform.rotation = PlayerPositionManager.instance.GetSavedRotation();
-            
-            rb.constraints = RigidbodyConstraints.None;
-            rb.freezeRotation = true;
-            
-            PlayerPositionManager.instance.ClearData();
-            
-            Debug.Log("Player restored to position: " + transform.position);
-        }
+        if (Input.GetKeyDown(KeyCode.A))
+            StartCoroutine(RotateRoutine(-90f));
+        else if (Input.GetKeyDown(KeyCode.D))
+            StartCoroutine(RotateRoutine(90f));
     }
 
-    public void OnMovement(InputValue value)
+    private void TryMove(Vector3 direction)
     {
-        movement = value.Get<Vector3>();
-    }
+        Vector3 targetPosition = transform.position + (direction * moveDistance);
 
-    public void OnJump(InputValue value)
-    {
-        if (value.Get<float>() > 0.5f && IsGrounded())
-        {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        }
-    }
-
-    public void OnCrouch(InputValue value)
-    {
-        isCrouching = value.Get<float>() > 0.5f;
+        Vector3 rayOrigin = transform.position + Vector3.up * 0.5f;
         
-        if (isCrouching)
+        if (!Physics.Raycast(rayOrigin, direction, moveDistance, obstacleLayer))
         {
-            capsule.height = crouchHeight;
+            StartCoroutine(MoveRoutine(targetPosition));
         }
         else
         {
-            capsule.height = initialHeight;
+            Debug.Log("Path blocked!");
         }
     }
 
-    void FixedUpdate()
+    private IEnumerator MoveRoutine(Vector3 targetPos)
     {
-        ApplyMovement();
-        HandleFootsteps();
+        isMoving = true;
+        Vector3 startPos = transform.position;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < moveDuration)
+        {
+            transform.position = Vector3.Lerp(startPos, targetPos, elapsedTime / moveDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetPos;
+        isMoving = false;
     }
 
-    void ApplyMovement()
+    private IEnumerator RotateRoutine(float angle)
     {
-        Vector3 moveDirection = transform.right * movement.x + transform.forward * movement.z;
-        
-        float speed;
-        if (isCrouching)
-        {
-            speed = moveSpeed * crouchSpeedMultiplier;
-        }
-        else
-        {
-            speed = moveSpeed;
-        }
+        isMoving = true;
+        Quaternion startRot = transform.rotation;
+        Quaternion targetRot = startRot * Quaternion.Euler(0, angle, 0);
+        float elapsedTime = 0f;
 
-        if (IsGrounded())
+        while (elapsedTime < turnDuration)
         {
-            rb.linearVelocity = new Vector3(moveDirection.x * speed, rb.linearVelocity.y, moveDirection.z * speed);
-        }
-        else
-        {
-            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
-        }
-    }
-
-    void HandleFootsteps()
-    {
-        if (!IsGrounded())
-        {
-            footstepTimer = 0f;
-            return;
+            transform.rotation = Quaternion.Lerp(startRot, targetRot, elapsedTime / turnDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
         }
 
-        bool isMoving = movement.magnitude > 0.1f;
-
-        if (!isMoving)
-        {
-            footstepTimer = 0f;
-            return;
-        }
-
-        float currentInterval = isCrouching ? crouchFootstepInterval : footstepInterval;
-        footstepTimer -= Time.fixedDeltaTime;
-
-        if (footstepTimer <= 0f)
-        {
-            PlayFootstep();
-            footstepTimer = currentInterval;
-        }
-    }
-
-    void PlayFootstep()
-    {
-        if (footstepClips.Length == 0)
-        {
-            Debug.LogWarning("No footstep clips assigned!");
-            return;
-        }
-
-        AudioClip randomClip = footstepClips[Random.Range(0, footstepClips.Length)];
-        audioSource.PlayOneShot(randomClip, footstepVolume);
-    }
-
-    bool IsGrounded()
-    {
-        return groundContactCount > 0;
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if (!collision.collider.isTrigger)
-        {
-            groundContactCount++;
-        }
-    }
-
-    void OnCollisionExit(Collision collision)
-    {
-        if (!collision.collider.isTrigger)
-        {
-            groundContactCount--;
-        }
-    }
-
-    public int GetGroundContactCount()
-    {
-        return groundContactCount;
+        transform.rotation = targetRot;
+        isMoving = false;
     }
 }
