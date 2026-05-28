@@ -16,7 +16,9 @@ public class ScoreCollectible : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             if (collectibleAudio != null)
+            {
                 collectibleAudio.PlayCollectSound();
+            }
 
             ScoringOD.instance.AddScore(scoreAmount);
             Destroy(gameObject);

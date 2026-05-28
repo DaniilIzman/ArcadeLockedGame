@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class HPCollectible : MonoBehaviour
 {
-    [SerializeField] int AdditionalBumps = 0;
+    [SerializeField] int healthRestore = 1;
 
     HealthOD PlayerHealth;
     CollectibleAudio collectibleAudio;
@@ -24,12 +24,13 @@ public class HPCollectible : MonoBehaviour
             if (collectibleAudio != null)
                 collectibleAudio.PlayCollectSound();
 
-            if (PlayerHealth.bumpCounter > 0)
+            if (PlayerHealth != null)
             {
-                PlayerHealth.bumpCounter -= AdditionalBumps;
+                PlayerHealth.bumpCounter -= healthRestore;
                 PlayerHealth.bumpCounter = Mathf.Max(PlayerHealth.bumpCounter, 0);
-                Destroy(gameObject);
             }
+
+            Destroy(gameObject);
         }
     }
 }

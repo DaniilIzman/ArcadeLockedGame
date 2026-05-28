@@ -19,7 +19,9 @@ public class SpeedCollectible : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             if (collectibleAudio != null)
+            {
                 collectibleAudio.PlayCollectSound();
+            }
 
             MovementOD playerMovement = other.GetComponent<MovementOD>();
             
@@ -27,6 +29,8 @@ public class SpeedCollectible : MonoBehaviour
             {
                 StartCoroutine(SpeedRoutine(playerMovement));
             }
+
+            Destroy(gameObject);
         }
     }
 
