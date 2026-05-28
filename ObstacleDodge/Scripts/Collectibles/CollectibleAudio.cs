@@ -17,7 +17,7 @@ public class CollectibleAudio : MonoBehaviour
 
     public void PlayCollectSound()
     {
-        if (collectSound != null)
+        if (collectSound != null && audioSource != null)
         {
             audioSource.PlayOneShot(collectSound, volume);
         }
