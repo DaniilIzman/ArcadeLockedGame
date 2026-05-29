@@ -4,101 +4,116 @@ using TMPro;
 public class ArcadeMachineUI : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI interactionText;
-    [SerializeField] string playText = "Press E to play";
+    [SerializeField] string playText  = "Press E to play";
     [SerializeField] string insufficientText = "Insufficient Credits";
 
-    HumanMovementAMI playerMovement;
-    ArcadeMachineAMI arcadeMachine;
+    ArcadeMachineAMI   arcadeMachine;
     ArcadeMachineAudio arcadeAudio;
-    bool hasShownInsufficientAlert = false;
+    HumanMovementAMI   playerMovement;
+
+    bool playerInRange    = false;
+    bool lastCouldAfford  = false;
+    bool entryAudioPlayed = false;
 
     void Start()
     {
-        interactionText.enabled = false;
         arcadeMachine = GetComponent<ArcadeMachineAMI>();
-        arcadeAudio = GetComponent<ArcadeMachineAudio>();
+        arcadeAudio   = GetComponent<ArcadeMachineAudio>();
+
+        interactionText.enabled = false;
     }
 
     void Update()
     {
-        if (playerMovement != null && arcadeMachine != null)
-        {
-            if (!playerMovement.isMoving)
-            {
-                UpdateInteractionText();
-                interactionText.enabled = true;
-            }
-            else
-            {
-                interactionText.enabled = false;
-                hasShownInsufficientAlert = false;
-            }
-        }
-    }
+        if (!playerInRange || playerMovement == null) return;
 
-    void UpdateInteractionText()
-    {
-        int gameCost = arcadeMachine.GetGameCost();
-        int currentCredits = PlayerCreditsAMI.instance.GetCredits();
-        
-        if (currentCredits >= gameCost)
+        bool canAfford = CanAfford();
+
+        RefreshText(canAfford);
+
+        if (canAfford != lastCouldAfford)
         {
-            interactionText.text = playText + " (Cost: " + gameCost + ")";
-            interactionText.color = Color.white;
-            arcadeMachine.SetInteractable(true);
-            hasShownInsufficientAlert = false;
-        }
-        else
-        {
-            interactionText.text = insufficientText + " (Need: " + gameCost + ")";
-            interactionText.color = Color.red;
-            arcadeMachine.SetInteractable(false);
-            
-            if (!hasShownInsufficientAlert)
+            if (canAfford && !entryAudioPlayed)
             {
                 if (arcadeAudio != null)
-                {
-                    arcadeAudio.PlayInsufficientCreditsSound();
-                }
-                hasShownInsufficientAlert = true;
+                    arcadeAudio.PlayTextAppearSound();
+
+                entryAudioPlayed = true;
             }
+            else if (!canAfford)
+            {
+                if (arcadeAudio != null)
+                    arcadeAudio.PlayInsufficientCreditsSound();
+            }
+
+            arcadeMachine.SetInteractable(canAfford);
+            lastCouldAfford = canAfford;
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player")) return;
+
+        playerMovement   = other.GetComponent<HumanMovementAMI>();
+        playerInRange    = true;
+        entryAudioPlayed = false;
+        lastCouldAfford  = !CanAfford();
+
+        interactionText.enabled = true;
+
+        if (CanAfford())
         {
-            playerMovement = other.GetComponent<HumanMovementAMI>();
-            arcadeMachine = GetComponent<ArcadeMachineAMI>();
-            arcadeAudio = GetComponent<ArcadeMachineAudio>();
-            
-            int gameCost = arcadeMachine.GetGameCost();
-            int currentCredits = PlayerCreditsAMI.instance.GetCredits();
-            
-            if (currentCredits >= gameCost)
-            {
-                if (arcadeAudio != null)
-                {
-                    arcadeAudio.PlayTextAppearSound();
-                }
-            }
+            if (arcadeAudio != null)
+                arcadeAudio.PlayTextAppearSound();
+
+            entryAudioPlayed = true;
         }
+        else
+        {
+            if (arcadeAudio != null)
+                arcadeAudio.PlayInsufficientCreditsSound();
+        }
+
+        arcadeMachine.SetInteractable(CanAfford());
+        lastCouldAfford = CanAfford();
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player")) return;
+
+        playerMovement   = null;
+        playerInRange    = false;
+        entryAudioPlayed = false;
+
+        interactionText.enabled = false;
+        arcadeMachine.SetInteractable(true);
+    }
+
+    void RefreshText(bool canAfford)
+    {
+        if (canAfford)
         {
-            interactionText.enabled = false;
-            playerMovement = null;
-            hasShownInsufficientAlert = false;
+            interactionText.text  = playText + " (Cost: " + arcadeMachine.GetGameCost() + ")";
+            interactionText.color = Color.white;
         }
+        else
+        {
+            interactionText.text  = insufficientText + " (Need: " + arcadeMachine.GetGameCost() + ")";
+            interactionText.color = Color.red;
+        }
+    }
+
+    bool CanAfford()
+    {
+        if (PlayerCreditsAMI.instance == null) return false;
+        return PlayerCreditsAMI.instance.GetCredits() >= arcadeMachine.GetGameCost();
     }
 
     public void HideInteractionText()
     {
-        this.enabled = false;
+        enabled = false;
         interactionText.enabled = false;
     }
 }
