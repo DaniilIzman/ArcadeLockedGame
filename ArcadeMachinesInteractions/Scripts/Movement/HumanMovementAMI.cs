@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CapsuleCollider))]
 public class HumanMovementAMI : MonoBehaviour
 {
-
     [Header("Input")]
     [SerializeField] InputActionAsset inputActions;
 
@@ -24,8 +23,9 @@ public class HumanMovementAMI : MonoBehaviour
     public bool isMoving    = false;
     public bool isCrouching = false;
 
-    Rigidbody       rb;
-    CapsuleCollider col;
+    Rigidbody        rb;
+    CapsuleCollider  col;
+    HumanAudioAMI    humanAudio;
 
     InputAction moveAction;
     InputAction crouchAction;
@@ -38,8 +38,9 @@ public class HumanMovementAMI : MonoBehaviour
 
     void Awake()
     {
-        rb  = GetComponent<Rigidbody>();
-        col = GetComponent<CapsuleCollider>();
+        rb         = GetComponent<Rigidbody>();
+        col        = GetComponent<CapsuleCollider>();
+        humanAudio = GetComponent<HumanAudioAMI>();
 
         rb.freezeRotation = true;
         rb.interpolation  = RigidbodyInterpolation.Interpolate;
@@ -101,6 +102,9 @@ public class HumanMovementAMI : MonoBehaviour
         col.height = Mathf.Lerp(col.height, targetHeight, Time.deltaTime * crouchTransitionSpeed);
         col.radius = Mathf.Lerp(col.radius, targetRadius, Time.deltaTime * crouchTransitionSpeed);
         col.center = new Vector3(0f, originalCenterY, 0f);
+
+        if (humanAudio != null)
+            humanAudio.Tick(isMoving, isCrouching);
     }
 
     void FixedUpdate()
