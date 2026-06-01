@@ -1,125 +1,126 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(Rigidbody))]
 public class MovementGG : MonoBehaviour
 {
+
     [Header("Input")]
     [SerializeField] private InputAction up;
     [SerializeField] private InputAction rotation;
 
-    [Header("Movement Settings")]
+    [Header("Movement")]
     [SerializeField] private float thrustForce = 500f;
     [SerializeField] private float rotationForce = 100f;
 
-    [Header("Space Feel")]
-    [SerializeField] [Range(0f, 1f)] private float linearDamping = 0.02f;
-    [SerializeField] [Range(0f, 1f)] private float angularDamping = 0.08f;
+    [Tooltip("Maximum Y position the player can reach.")]
+    [SerializeField] private float maxHeight = 100f;
 
-    [Header("Audio")]
+    [Header("Space Feel")]
+    [SerializeField, Range(0f, 1f)] private float linearDamping = 0.02f;
+    [SerializeField, Range(0f, 1f)] private float angularDamping = 0.08f;
+
+    [Header("Audio Clips")]
+    [SerializeField] private AudioClip engineLoopAudio;
     [SerializeField] private AudioClip thrustAudio;
     [SerializeField] private AudioClip rotateLeftAudio;
     [SerializeField] private AudioClip rotateRightAudio;
+
+    [Header("Audio Volume")]
+    [SerializeField, Range(0f, 1f)] private float engineVolume = 0.4f;
+    [SerializeField, Range(0f, 1f)] private float thrustVolume = 0.8f;
+    [SerializeField, Range(0f, 1f)] private float rotationVolume = 0.6f;
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem mainThrustParticleSystem;
     [SerializeField] private ParticleSystem leftThrustParticleSystem;
     [SerializeField] private ParticleSystem rightThrustParticleSystem;
+    private Rigidbody rb;
 
-    private Rigidbody myRigidBody;
-    private AudioSource audioSource;
-    private AudioSource rotationAudioSource;
+    private AudioSource engineSource;
+    private AudioSource thrustSource;
+    private AudioSource rotationSource;
 
     private bool isThrusting;
+    private bool canThrust;
 
-    void Start()
+    private void Awake()
     {
-        myRigidBody = GetComponent<Rigidbody>();
-        audioSource = GetComponent<AudioSource>();
+        rb = GetComponent<Rigidbody>();
 
-        rotationAudioSource = gameObject.AddComponent<AudioSource>();
-        rotationAudioSource.loop = false;
-        rotationAudioSource.playOnAwake = false;
+        rb.freezeRotation = true;
 
-        if (myRigidBody != null)
-        {
-            myRigidBody.freezeRotation = true;
-        }
+        engineSource = AddLoopingAudioSource(engineVolume);
+        thrustSource = AddLoopingAudioSource(thrustVolume);
+        rotationSource = AddLoopingAudioSource(rotationVolume);
     }
 
-    void OnEnable()
+    private void Start()
+    {
+        PlayAudioSource(engineSource, engineLoopAudio);
+    }
+
+    private void OnEnable()
     {
         up.Enable();
         rotation.Enable();
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         up.Disable();
         rotation.Disable();
 
-        StopThrusting();
-        StopRotationSound();
+        StopAllAudio();
+        StopAllParticles();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        ThrustController();
-        RotationController();
+        canThrust = transform.position.y < maxHeight;
+
+        HandleThrust();
+        HandleRotation();
         ApplyDamping();
+        ClampHeight();
     }
 
-    void ThrustController()
+    private void HandleThrust()
     {
-        isThrusting = up.IsPressed();
+        bool thrustHeld = up.IsPressed();
 
-        if (isThrusting)
+        if (thrustHeld)
         {
-            BeginThrusting();
+            PlayAudioSource(thrustSource, thrustAudio);
+        }
+        else if (thrustSource.isPlaying)
+        {
+            thrustSource.Stop();
+        }
+
+        if (thrustHeld && canThrust)
+        {
+            rb.AddRelativeForce(Vector3.up * thrustForce * Time.fixedDeltaTime);
+
+            PlayParticle(mainThrustParticleSystem);
+
+            isThrusting = true;
         }
         else
         {
-            StopThrusting();
+            StopParticle(mainThrustParticleSystem);
+
+            isThrusting = false;
         }
     }
 
-    void BeginThrusting()
+    private void HandleRotation()
     {
-        myRigidBody.AddRelativeForce(Vector3.up * thrustForce * Time.fixedDeltaTime);
+        float input = rotation.ReadValue<float>();
 
-        if (audioSource != null &&
-            thrustAudio != null &&
-            !audioSource.isPlaying)
-        {
-            audioSource.clip = thrustAudio;
-            audioSource.loop = true;
-            audioSource.Play();
-        }
-
-        PlayParticle(mainThrustParticleSystem);
-        PlayParticle(leftThrustParticleSystem);
-        PlayParticle(rightThrustParticleSystem);
-    }
-
-    void StopThrusting()
-    {
-        if (audioSource != null && audioSource.isPlaying)
-        {
-            audioSource.Stop();
-        }
-
-        StopParticle(mainThrustParticleSystem);
-        StopParticle(leftThrustParticleSystem);
-        StopParticle(rightThrustParticleSystem);
-    }
-
-    void RotationController()
-    {
-        float rotationInput = rotation.ReadValue<float>();
-
-        if (rotationInput < 0f)
+        if (input < 0f)
         {
             ApplyRotation(rotationForce);
-
             PlayRotationSound(rotateRightAudio);
 
             if (isThrusting)
@@ -127,11 +128,15 @@ public class MovementGG : MonoBehaviour
                 StopParticle(leftThrustParticleSystem);
                 PlayParticle(rightThrustParticleSystem);
             }
+            else
+            {
+                StopParticle(leftThrustParticleSystem);
+                StopParticle(rightThrustParticleSystem);
+            }
         }
-        else if (rotationInput > 0f)
+        else if (input > 0f)
         {
             ApplyRotation(-rotationForce);
-
             PlayRotationSound(rotateLeftAudio);
 
             if (isThrusting)
@@ -139,70 +144,114 @@ public class MovementGG : MonoBehaviour
                 StopParticle(rightThrustParticleSystem);
                 PlayParticle(leftThrustParticleSystem);
             }
+            else
+            {
+                StopParticle(leftThrustParticleSystem);
+                StopParticle(rightThrustParticleSystem);
+            }
         }
         else
         {
-            StopRotationSound();
+            rotationSource.Stop();
 
             if (isThrusting)
             {
                 PlayParticle(leftThrustParticleSystem);
                 PlayParticle(rightThrustParticleSystem);
             }
+            else
+            {
+                StopParticle(leftThrustParticleSystem);
+                StopParticle(rightThrustParticleSystem);
+            }
         }
     }
 
-    void ApplyRotation(float rotationPerFrame)
+    private void ApplyRotation(float amount)
     {
-        transform.Rotate(Vector3.forward * rotationPerFrame * Time.fixedDeltaTime);
+        transform.Rotate(Vector3.right * amount * Time.fixedDeltaTime);
     }
 
-    void ApplyDamping()
+    private void PlayRotationSound(AudioClip clip)
     {
-        myRigidBody.linearVelocity *= (1f - linearDamping);
-        myRigidBody.angularVelocity *= (1f - angularDamping);
-    }
+        if (clip == null) return;
 
-    void PlayRotationSound(AudioClip clip)
-    {
-        if (rotationAudioSource == null || clip == null)
+        if (rotationSource.clip != clip || !rotationSource.isPlaying)
         {
+            rotationSource.clip = clip;
+            rotationSource.volume = rotationVolume;
+            rotationSource.Play();
+        }
+    }
+
+    private void ClampHeight()
+    {
+        if (transform.position.y <= maxHeight)
             return;
-        }
 
-        if (!rotationAudioSource.isPlaying ||
-            rotationAudioSource.clip != clip)
+        Vector3 pos = transform.position;
+        pos.y = maxHeight;
+        transform.position = pos;
+
+        Vector3 velocity = rb.linearVelocity;
+
+        if (velocity.y > 0f)
         {
-            rotationAudioSource.clip = clip;
-            rotationAudioSource.loop = true;
-            rotationAudioSource.Play();
+            velocity.y = 0f;
+            rb.linearVelocity = velocity;
         }
     }
 
-    void StopRotationSound()
+    private void ApplyDamping()
     {
-        if (rotationAudioSource != null &&
-            rotationAudioSource.isPlaying)
+        rb.linearVelocity *= (1f - linearDamping);
+        rb.angularVelocity *= (1f - angularDamping);
+    }
+
+    private AudioSource AddLoopingAudioSource(float volume)
+    {
+        AudioSource source = gameObject.AddComponent<AudioSource>();
+        source.loop = true;
+        source.playOnAwake = false;
+        source.volume = volume;
+        return source;
+    }
+
+    private void PlayAudioSource(AudioSource source, AudioClip clip)
+    {
+        if (clip == null)
+            return;
+
+        if (!source.isPlaying || source.clip != clip)
         {
-            rotationAudioSource.Stop();
+            source.clip = clip;
+            source.Play();
         }
     }
 
-    void PlayParticle(ParticleSystem particleSystem)
+    private void StopAllAudio()
     {
-        if (particleSystem != null &&
-            !particleSystem.isPlaying)
-        {
-            particleSystem.Play();
-        }
+        engineSource.Stop();
+        thrustSource.Stop();
+        rotationSource.Stop();
     }
 
-    void StopParticle(ParticleSystem particleSystem)
+    private void PlayParticle(ParticleSystem ps)
     {
-        if (particleSystem != null &&
-            particleSystem.isPlaying)
-        {
-            particleSystem.Stop();
-        }
+        if (ps != null && !ps.isPlaying)
+            ps.Play();
+    }
+
+    private void StopParticle(ParticleSystem ps)
+    {
+        if (ps != null && ps.isPlaying)
+            ps.Stop();
+    }
+
+    private void StopAllParticles()
+    {
+        StopParticle(mainThrustParticleSystem);
+        StopParticle(leftThrustParticleSystem);
+        StopParticle(rightThrustParticleSystem);
     }
 }
